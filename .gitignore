@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.pyc
+tests/generated/
+node_modules/
+.env
+.env.*
+*.logicx/
+*.cpr
+*.nki
+*.nkm
+*.wav
+*.mp3

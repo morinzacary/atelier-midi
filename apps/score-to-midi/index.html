@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dorico → Logic | Atelier MIDI</title>
+<style>
+:root{color-scheme:dark;--bg:#10131a;--panel:#191e29;--line:#2c3443;--muted:#aab3c4;--text:#f7f8fb;--accent:#c3a5ff;--green:#88e2bd}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% -20%,#382d59 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{max-width:1040px;margin:48px auto;padding:0 24px}.top{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:30px}.eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}h1{font-size:34px;line-height:1.1;margin:8px 0}p{color:var(--muted);margin:6px 0}.badge{border:1px solid #4b4162;background:#211d30;border-radius:999px;padding:8px 13px;color:#ded0ff;font-size:13px;white-space:nowrap}.card{border:1px solid var(--line);background:linear-gradient(145deg,#1b202b,#171b24);border-radius:18px;padding:24px;margin:16px 0;box-shadow:0 16px 42px #0002}.step{display:flex;gap:17px;align-items:flex-start}.n{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:11px;color:#16121f;background:var(--accent);font-weight:800}.step h2{margin:1px 0 3px;font-size:18px}.filebox{margin-top:16px;border:1px dashed #515c70;border-radius:13px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#11151d}.filebox input{max-width:300px;color:var(--muted)}button,.select{font:inherit;border-radius:10px;border:1px solid var(--line);padding:10px 14px;background:#252c39;color:var(--text)}button{cursor:pointer;font-weight:650}button:hover{border-color:var(--accent)}button.primary{border:0;background:var(--accent);color:#17111f;padding:13px 19px}button:disabled{opacity:.45;cursor:not-allowed}.parts{display:grid;gap:10px;margin-top:15px}.part{display:grid;grid-template-columns:minmax(150px,1.6fr) 1fr 1fr 1fr;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#141923}.part strong{display:block}.part small{color:var(--muted)}select{width:100%;font:inherit;color:var(--text);background:#242b38;border:1px solid #3b4556;border-radius:9px;padding:9px}.actions{display:flex;align-items:center;gap:14px;margin-top:20px}.status{color:var(--muted);font-size:14px}.summary{margin-top:12px;color:var(--green);font-weight:650}.hint{border-left:3px solid var(--accent);padding:12px 15px;background:#201d29;border-radius:0 9px 9px 0;color:#d7d1e2}.foot{font-size:12px;color:#8690a2;margin:22px 3px}.hidden{display:none}@media(max-width:700px){.wrap{margin:28px auto;padding:0 14px}.top{display:block}.badge{display:inline-block;margin-top:12px}.filebox{display:block}.part{grid-template-columns:1fr}.part select{margin-top:4px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div><div class="eyebrow">Atelier MIDI · Cinematic Studio</div><h1>Dorico <span style="color:var(--accent)">→</span> Logic</h1><p>Répartis ta partition sur les rangées de ta template Logic.</p></div><div class="badge">Version 7.13 · Triolets et legato rapide</div></header>
+<section class="card"><div class="step"><div class="n">1</div><div><h2>Choisis ton export Dorico</h2><p>MusicXML standard ou compressé (.xml, .musicxml, .mxl).</p></div></div><div class="filebox"><input id="file" type="file" accept=".xml,.musicxml,.mxl,application/xml,text/xml"><button id="analyze">Analyser la partition</button></div><div id="fileStatus" class="status" style="margin-top:10px">Le fichier reste sur ton ordinateur.</div></section>
+<section id="setup" class="card hidden"><div class="step"><div class="n">2</div><div><h2>Vérifie les instruments</h2><p>Les parties d’un même pupitre sont réunies. Piano, célesta et harpes réunissent leurs portées. Le chœur SATB forme une seule piste.</p></div></div><div id="parts" class="parts"></div><p>Le réglage template adapte les octaves du piccolo, du contrebasson et des contrebasses, puis descend le Tin Whistle d’une octave et remonte timbales, trombone basse et tuba d’une octave pour tes patches.</p><label><input type="checkbox" id="splitLongs" checked> Séparer les longues : deux voix en Legato expressif, Sustain à partir de trois voix</label><p>Chevauchement legato : 60 ms. Répétitions monophoniques : coupure de 10 ms. Les départs des transitions restent sur la grille. Les débuts de phrase et réattaques de même hauteur sont compensés selon le délai négatif de leur piste. Sur un début trop court, la correction est limitée pour préserver la note suivante. Legato : vélocité 80, ou 86 avec accent. Les staccatos restent sur Shorts dans tout l’orchestre. Les accents seuls restent sur leur piste Longs/legato dans toutes les familles, avec seulement 6 points de vélocité supplémentaires. Les vrais staccatos, staccatissimos et spiccatos écrits restent sur Shorts. Leur intensité suit la nuance par la vélocité ; CC11 y est initialisé à 127 et reste fixe. Les silences écrits sont conservés, y compris dans les cuivres aux mesures 39 à 42. Délais précédents rétablis : Longs des cuivres à −100 ms, cordes à −250 ms, bois à −130 ms. Les changements de CC1 et CC11 sont arrondis sur la fin de la note précédente, sans déplacer les notes. La vélocité suit la nuance écrite, avec 6 points supplémentaires pour les accents, dans la limite de 127 (120 pour les percussions). Aucun renfort CC11 artificiel n’est ajouté. Les anticipations sont inscrites dans le projet Logic et détaillées dans le plan d’affectation.</p><label><input type="checkbox" id="fastStringTiming" checked> Adapter le legato des cordes aux passages rapides</label><p>Transition expressive rapide à vélocité 105 (111 avec accent), compensation par note en conservant le délai de piste. Les passages plus lents restent à 80/86.</p><label><input type="checkbox" id="shortCC"> Envoyer aussi CC1 sur Shorts et Pizzicato (si le sélecteur CC1 est désactivé dans Kontakt)</label><details style="margin-top:16px" open><summary>Vibrato en fin de note</summary><label><input type="checkbox" id="autoVibrato" checked> Ajouter un vibrato discret sur certaines longues expressives</label><p>Entrée après la moitié de la note, montée arrondie puis retour doux avant la suivante. Pas de vibrato automatique sur les Shorts, les accords polyphoniques ou les percussions.</p><label><input type="checkbox" id="vibratoStrings" checked> Cordes · CC2</label> <label><input type="checkbox" id="vibratoWinds" checked> Bois · CC2 selon ton affectation Kontakt</label> <label><input type="checkbox" id="vibratoBrass"> Cuivres · uniquement si ton patch répond au CC2</label><p>Le vibrato CC2 est documenté pour CSS. Vérifie l’affectation CC2 et l’activation du Vibrato X-Fade dans Kontakt pour tes autres patches. Les manuels CSB consultés ne confirment pas ce contrôleur. Le portamento CC5 n’est pas ajouté automatiquement dans cette version.</p></details><details style="margin-top:16px"><summary>Tin Whistle · notes de commande</summary><p>Numéros MIDI selon l’affichage Do3 = 60 de Logic. Modifiables selon Kontakt.</p><label>Staccato · La0 <input id="whistleShort" type="number" min="0" max="127" value="33"></label> <label>Legato · Do0 <input id="whistleLong" type="number" min="0" max="127" value="24"></label></details><details style="margin-top:12px"><summary>Timbales · notes de commande</summary><p>Affichage Logic Do3 = 60. Les commandes sont indépendantes de la transposition des notes.</p><label>Coups · Do1 <input id="timpaniHit" type="number" min="0" max="127" value="36"></label> <label>Roulements · Ré1 <input id="timpaniRoll" type="number" min="0" max="127" value="38"></label> <label>Crescendo · Mi1 <input id="timpaniCresc" type="number" min="0" max="127" value="40"></label></details><div class="actions"><button id="convert" class="primary">Créer le MIDI pour Logic</button><span id="convertStatus" class="status"></span></div><div id="summary" class="summary"></div></section>
+<section class="card"><div class="step"><div class="n">3</div><div><h2>Importe dans Logic</h2><p>Pour utiliser Kontakt déjà chargé, ouvre une copie de ta template préparée avec les délais de la version 7.13. Les deux voix longues demandent deux instances distinctes ; leurs pistes portent les noms indiqués ci-dessous. Après conversion, déplie la liste des pistes et glisse le fichier de chaque région sur la rangée indiquée à la mesure 1.</p></div></div><div class="hint" style="margin-top:18px">Les accents seuls restent dans leur phrase Longs/legato ; seuls les vrais jeux courts écrits utilisent Shorts. Les accents ajoutent 6 points de vélocité. Les nuances des Shorts sont rendues par la vélocité, sans courbe de CC11. Les rythmes et silences écrits sont conservés. Sustain est réservé à la polyphonie. Le vibrato CC2 apparaît progressivement dans la seconde moitié de certaines notes longues, puis revient doucement à zéro avant la suivante. Les nuances écrites sont conservées et atteintes par une petite transition arrondie sur la fin de la note précédente ; les crescendos et decrescendos écrits restent en place. Les arpèges écrits sont échelonnés. Piano, harpes, célesta et percussions suivent les nuances par leur vélocité. Les timbales utilisent aussi CC1 pour les roulements. Les autres tenues utilisent CC1 pour le timbre et CC11 pour le niveau. Les Shorts et Pizzicato suivent les nuances par la vélocité ; leur CC11 reste fixe à 127. Les trilles ajoutent la note supérieure. Les sorties MIDI des Articulation Sets viennent de ta template. Les longues se répartissent sur deux voix de legato expressif. Sustain reste réservé aux passages à trois voix ou plus. Les délais de piste se règlent dans le projet Logic ; un MIDI standard ne mémorise pas ce paramètre. Dans Logic, affiche ces CC dans le Piano Roll, en mode Région.</div></section>
+<p class="foot">Le MIDI standard ne peut pas placer les régions sur les pistes déjà ouvertes dans Logic ni charger Kontakt automatiquement.</p>
+</main>
+<script>
+const PROFILE={"source_template": "Example Cinematic Studio orchestral layout", "scope": "Cinematic Studio instrument lanes: woodwinds, brass, strings", "articulation_sets": {"CSB Legato": {"plist_file": "CSB Legato.plist", "multiple_outputs_active": null, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Legato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 76}]}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Sustain", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 81}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 80, "ValueLow": 76}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 85, "ValueLow": 81}]}, "CSS Longs": {"plist_file": "CSS Longs.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Sustain + Con Sordino", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 81}, {"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 86}]}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Sustain", "Output": [{"MB1": 58, "Status": "Controller", "ValueLow": 91}, {"MB1": 58, "Status": "Controller", "ValueLow": 81}]}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Legato Expressif + Con Sordino", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 6}, {"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 86}, {"MB1": 58, "Status": "Controller", "ValueLow": 76}]}, {"ArticulationID": 4, "ID": 1004, "MidiChannel": 0, "Name": "Legato + Con Sordino (Low Latency)", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 86}, {"MB1": 58, "Status": "Controller", "ValueLow": 76}]}, {"ArticulationID": 5, "ID": 1005, "MidiChannel": 0, "Name": "Legato (Low Latency)", "Output": [{"MB1": 58, "Status": "Controller", "ValueLow": 0}, {"MB1": 58, "Status": "Controller", "ValueLow": 91}]}, {"ArticulationID": 6, "ID": 1006, "MidiChannel": 0, "Name": "Legato Expressif", "Output": [{"MB1": 58, "Status": "Controller", "ValueLow": 76}, {"MB1": 58, "Status": "Controller", "ValueLow": 6}, {"MB1": 58, "Status": "Controller", "ValueLow": 91}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller"}, {"ID": 1002, "MB1": 58, "Status": "Controller"}, {"ID": 1003, "MB1": 58, "Status": "Controller"}, {"ID": 1004, "MB1": 58, "Status": "Controller"}, {"ID": 1005, "MB1": 58, "Status": "Controller"}, {"ID": 1006, "MB1": 58, "Status": "Controller"}]}, "CSS Pizz": {"plist_file": "CSS Pizz.plist", "multiple_outputs_active": null, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Pizzicato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 31}], "Symbol": "Pizzicato (Left Hand)"}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Bartok Snap", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 36}]}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Col Legno", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 41}]}], "switches": [{"ID": 1001, "Status": "Controller"}, {"ID": 1002, "Status": "Controller"}, {"ID": 1003, "Status": "Controller"}]}, "CSS Shorts": {"plist_file": "CSS Shorts.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Spiccato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 0}], "Symbol": "Staccato"}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Staccatissimo", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 33}], "Symbol": "Staccatissimo"}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Staccato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 65}], "Symbol": "Staccato"}, {"ArticulationID": 4, "ID": 1004, "MidiChannel": 0, "Name": "Sfz", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 97}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 32, "ValueLow": 0}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 64, "ValueLow": 33}, {"ID": 1003, "MB1": 58, "Status": "Controller", "ValueHigh": 96, "ValueLow": 65}, {"ID": 1004, "MB1": 58, "Status": "Controller", "ValueHigh": 127, "ValueLow": 97}]}, "CSW Longs": {"plist_file": "CSW Longs.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Legato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 80}, {"MB1": 24, "MidiChannel": 0, "Status": "Note On"}]}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Sustain", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 81}]}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Legato Expressif", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 80}, {"MB1": 24, "Status": "Note On", "ValueLow": 83}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 127, "ValueLow": 65}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 64, "ValueLow": 0}, {"ID": 1003, "MB1": 58, "Status": "Controller", "ValueHigh": 10, "ValueLow": 6}]}, "CSW Marcato": {"plist_file": "CSW Marcato.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Leg On", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 76}, {"MB1": 58, "Status": "Controller", "ValueLow": 66}], "Symbol": "Marcato"}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Leg Off", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 81}], "Symbol": "Marcato"}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Overlay Rep + Leg On", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 76}, {"MB1": 58, "Status": "Controller", "ValueLow": 71}], "Symbol": "Marcato"}, {"ArticulationID": 4, "ID": 1004, "MidiChannel": 0, "Name": "Overlay Rep + Leg Off", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 81}, {"MB1": 58, "Status": "Controller", "ValueLow": 71}], "Symbol": "Marcato"}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 80, "ValueLow": 76}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 85, "ValueLow": 81}, {"ID": 1003, "MB1": 58, "Status": "Controller", "ValueHigh": 75, "ValueLow": 71}, {"ID": 1004, "MB1": 58, "Status": "Controller", "ValueHigh": 75, "ValueLow": 71}]}, "CSW Muted": {"plist_file": "CSW Muted.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Legato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 76}, {"MB1": 58, "Status": "Controller", "ValueLow": 56}]}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Sustain Long", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 56}, {"MB1": 58, "Status": "Controller", "ValueLow": 81}]}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Sustain Short", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 31}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 80, "ValueLow": 76}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 60, "ValueLow": 56}, {"ID": 1003, "MB1": 58, "Status": "Controller", "ValueHigh": 40, "ValueLow": 31}]}, "CSW Shorts": {"plist_file": "CSW Shorts.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Repetitions", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 0}], "Symbol": "Staccato"}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Staccatissimo", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 33}], "Symbol": "Staccatissimo"}, {"ArticulationID": 3, "ID": 1003, "MidiChannel": 0, "Name": "Staccato", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 65}], "Symbol": "Staccato"}, {"ArticulationID": 4, "ID": 1004, "MidiChannel": 0, "Name": "Sfz", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 0}, {"MB1": 29, "Status": "Note On", "ValueLow": 97}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 32, "ValueLow": 0}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 64, "ValueLow": 33}, {"ID": 1003, "MB1": 58, "Status": "Controller", "ValueHigh": 96, "ValueLow": 65}, {"ID": 1004, "MB1": 58, "Status": "Controller", "ValueHigh": 127, "ValueLow": 97}]}, "CSW Trills": {"plist_file": "CSW Trills.plist", "multiple_outputs_active": true, "articulations": [{"ArticulationID": 1, "ID": 1001, "MidiChannel": 0, "Name": "Legato On", "Output": [{"MB1": 58, "MidiChannel": 0, "Status": "Controller", "ValueLow": 76}, {"MB1": 27, "Status": "Note On"}]}, {"ArticulationID": 2, "ID": 1002, "MidiChannel": 0, "Name": "Legato Off", "Output": [{"MB1": 58, "Status": "Controller", "ValueLow": 81}, {"MB1": 27, "Status": "Note On"}]}], "switches": [{"ID": 1001, "MB1": 58, "Status": "Controller", "ValueHigh": 80, "ValueLow": 76}, {"ID": 1002, "MB1": 58, "Status": "Controller", "ValueHigh": 85, "ValueLow": 81}]}}, "track_assignments": [{"track_number": 3, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 4, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 5, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 6, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Flutter", "articulation_set": "CSW Trills"}, {"track_number": 7, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 8, "section": "WOODWINDS", "instrument_group": "PICCOLO", "lane": "Measured Repetiton", "articulation_set": "CSW Marcato"}, {"track_number": 10, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 11, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 12, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 13, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Flutter", "articulation_set": "CSW Trills"}, {"track_number": 14, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 15, "section": "WOODWINDS", "instrument_group": "2 FLUTES", "lane": "Measured Repetiton", "articulation_set": "CSW Marcato"}, {"track_number": 17, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 18, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 19, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 20, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Flutter", "articulation_set": "CSW Trills"}, {"track_number": 21, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 22, "section": "WOODWINDS", "instrument_group": "FLUTE ALTO", "lane": "Measured Repetiton", "articulation_set": "CSW Marcato"}, {"track_number": 24, "section": "WOODWINDS", "instrument_group": "2 OBOES", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 25, "section": "WOODWINDS", "instrument_group": "2 OBOES", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 26, "section": "WOODWINDS", "instrument_group": "2 OBOES", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 27, "section": "WOODWINDS", "instrument_group": "2 OBOES", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 28, "section": "WOODWINDS", "instrument_group": "2 OBOES", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 30, "section": "WOODWINDS", "instrument_group": "ENGLISH HORN", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 31, "section": "WOODWINDS", "instrument_group": "ENGLISH HORN", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 32, "section": "WOODWINDS", "instrument_group": "ENGLISH HORN", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 33, "section": "WOODWINDS", "instrument_group": "ENGLISH HORN", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 34, "section": "WOODWINDS", "instrument_group": "ENGLISH HORN", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 36, "section": "WOODWINDS", "instrument_group": "2 CLARINETS", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 37, "section": "WOODWINDS", "instrument_group": "2 CLARINETS", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 38, "section": "WOODWINDS", "instrument_group": "2 CLARINETS", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 39, "section": "WOODWINDS", "instrument_group": "2 CLARINETS", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 40, "section": "WOODWINDS", "instrument_group": "2 CLARINETS", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 42, "section": "WOODWINDS", "instrument_group": "BASS CLARINET", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 43, "section": "WOODWINDS", "instrument_group": "BASS CLARINET", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 44, "section": "WOODWINDS", "instrument_group": "BASS CLARINET", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 45, "section": "WOODWINDS", "instrument_group": "BASS CLARINET", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 46, "section": "WOODWINDS", "instrument_group": "BASS CLARINET", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 48, "section": "WOODWINDS", "instrument_group": "2 BASSOONS", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 49, "section": "WOODWINDS", "instrument_group": "2 BASSOONS", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 50, "section": "WOODWINDS", "instrument_group": "2 BASSOONS", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 51, "section": "WOODWINDS", "instrument_group": "2 BASSOONS", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 52, "section": "WOODWINDS", "instrument_group": "2 BASSOONS", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 54, "section": "WOODWINDS", "instrument_group": "CONTRABASSOON", "lane": "Longs", "articulation_set": "CSW Longs"}, {"track_number": 55, "section": "WOODWINDS", "instrument_group": "CONTRABASSOON", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 56, "section": "WOODWINDS", "instrument_group": "CONTRABASSOON", "lane": "Trills", "articulation_set": "CSW Trills"}, {"track_number": 57, "section": "WOODWINDS", "instrument_group": "CONTRABASSOON", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 58, "section": "WOODWINDS", "instrument_group": "CONTRABASSOON", "lane": "Measured Repetition", "articulation_set": "CSW Marcato"}, {"track_number": 61, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Longs", "articulation_set": "CSB Legato"}, {"track_number": 62, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 63, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Muted", "articulation_set": "CSW Muted"}, {"track_number": 64, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Flutter", "articulation_set": "CSB Legato"}, {"track_number": 65, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 66, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Double Tongue", "articulation_set": "CSB Legato"}, {"track_number": 67, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 68, "section": "BRASS", "instrument_group": "4 HORNS", "lane": "Rips", "articulation_set": "CSW Marcato"}, {"track_number": 70, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Longs", "articulation_set": "CSB Legato"}, {"track_number": 71, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 72, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Muted", "articulation_set": "CSW Muted"}, {"track_number": 73, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Flutter", "articulation_set": "CSB Legato"}, {"track_number": 74, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 75, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Double Tongue", "articulation_set": "CSB Legato"}, {"track_number": 76, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 77, "section": "BRASS", "instrument_group": "2 TRUMPETS", "lane": "Rips", "articulation_set": "CSW Marcato"}, {"track_number": 79, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Longs", "articulation_set": "CSB Legato"}, {"track_number": 80, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 81, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Muted", "articulation_set": "CSW Muted"}, {"track_number": 82, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Flutter", "articulation_set": "CSB Legato"}, {"track_number": 83, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Double Tongue", "articulation_set": "CSB Legato"}, {"track_number": 84, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 85, "section": "BRASS", "instrument_group": "2 TROMBONES", "lane": "Rips", "articulation_set": "CSW Marcato"}, {"track_number": 87, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Longs", "articulation_set": "CSB Legato"}, {"track_number": 88, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 89, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Muted", "articulation_set": "CSW Muted"}, {"track_number": 90, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Flutter", "articulation_set": "CSB Legato"}, {"track_number": 91, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Double Tongue", "articulation_set": "CSB Legato"}, {"track_number": 92, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 93, "section": "BRASS", "instrument_group": "BASS TROMBONE", "lane": "Rips", "articulation_set": "CSW Marcato"}, {"track_number": 95, "section": "BRASS", "instrument_group": "TUBA", "lane": "Longs", "articulation_set": "CSB Legato"}, {"track_number": 96, "section": "BRASS", "instrument_group": "TUBA", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 97, "section": "BRASS", "instrument_group": "TUBA", "lane": "Flutter", "articulation_set": "CSB Legato"}, {"track_number": 98, "section": "BRASS", "instrument_group": "TUBA", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 99, "section": "BRASS", "instrument_group": "TUBA", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 100, "section": "BRASS", "instrument_group": "TUBA", "lane": "Rips", "articulation_set": "CSW Marcato"}, {"track_number": 182, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Longs", "articulation_set": "CSS Longs"}, {"track_number": 183, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Shorts", "articulation_set": "CSS Shorts"}, {"track_number": 184, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 185, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Measured Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 186, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Harmonic", "articulation_set": "CSB Legato"}, {"track_number": 187, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 188, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 189, "section": "STRINGS", "instrument_group": "VIOLINS I", "lane": "Pizzicato", "articulation_set": "Nouveau réglage"}, {"track_number": 191, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Longs", "articulation_set": "CSS Longs"}, {"track_number": 192, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Shorts", "articulation_set": "CSS Shorts"}, {"track_number": 193, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 194, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Measured Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 195, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Harmonic", "articulation_set": "CSB Legato"}, {"track_number": 196, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 197, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 198, "section": "STRINGS", "instrument_group": "VIOLINS II", "lane": "Pizzicato", "articulation_set": "CSS Pizz"}, {"track_number": 200, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Longs", "articulation_set": "CSS Longs"}, {"track_number": 201, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Shorts", "articulation_set": "CSS Shorts"}, {"track_number": 202, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 203, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Measured Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 204, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Harmonics", "articulation_set": "CSB Legato"}, {"track_number": 205, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 206, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 207, "section": "STRINGS", "instrument_group": "VIOLAS", "lane": "Pizzicato", "articulation_set": "CSS Pizz"}, {"track_number": 209, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Longs", "articulation_set": "CSS Longs"}, {"track_number": 210, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Shorts", "articulation_set": "CSW Shorts"}, {"track_number": 211, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 212, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Measured Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 213, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Harmonics", "articulation_set": "CSB Legato"}, {"track_number": 214, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 215, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 216, "section": "STRINGS", "instrument_group": "CELLO", "lane": "Pizzicato", "articulation_set": "CSS Pizz"}, {"track_number": 218, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Longs", "articulation_set": "CSS Longs"}, {"track_number": 219, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Shorts", "articulation_set": "CSS Shorts"}, {"track_number": 220, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 221, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Measured Tremolo", "articulation_set": "CSB Legato"}, {"track_number": 222, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Trills", "articulation_set": "CSB Legato"}, {"track_number": 223, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Marcato", "articulation_set": "CSW Marcato"}, {"track_number": 224, "section": "STRINGS", "instrument_group": "DOUBLEBASSES", "lane": "Pizzicato", "articulation_set": "CSS Pizz"}], "verification_notes": ["Example mapping: adapt track destinations and articulation sets to your own DAW template. Sound libraries and Logic projects are not included."]};
+const $=s=>document.querySelector(s), lname=e=>(e.localName||e.nodeName||"").replace(/^.*:/,""), kids=(e,n)=>Array.from(e?.children||[]).filter(x=>!n||lname(x)===n), one=(e,n)=>kids(e,n)[0]||null, txt=(e,n,d="")=>one(e,n)?.textContent?.trim()||d;
+const sets=PROFILE.articulation_sets, assignments=PROFILE.track_assignments, groups=[...new Set(assignments.map(x=>x.instrument_group))].sort(), banks=["Cinematic Studio Strings (CSS)","Cinematic Studio Brass (CSB)","Cinematic Studio Woodwinds (CSW)","Cinematic Studio Solo Strings (CSSS)","Cinematic Studio Piano (CSP)"];
+let parsed=null;
+function clean(s){return (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
+function infer(name){const n=clean(name);let group="",bank=banks[2];if(/violin|violon(?!cell)/.test(n)){group=/ii|2|second/.test(n)?"VIOLINS II":"VIOLINS I";bank=banks[0]}else if(/viola|alto a cordes/.test(n)){group="VIOLAS";bank=banks[0]}else if(/cello|violoncelle/.test(n)){group="CELLO";bank=banks[0]}else if(/double bass|doublebass|contrabasses?$|contrebasses?$/.test(n)){group="DOUBLEBASSES";bank=banks[0]}else if(/^piccolo$/.test(n)){group="PICCOLO"}else if(/english horn|cor anglais/.test(n)){group="ENGLISH HORN"}else if(/oboe|hautbois/.test(n)){group="2 OBOES"}else if(/^(bass clarinet|clarinette basse)/.test(n)){group="BASS CLARINET"}else if(/^(?!.*contrabass).*clarinet/.test(n)){group="2 CLARINETS"}else if(/contrabassoon|contrebasson/.test(n)){group="CONTRABASSOON"}else if(/bassoon|basson/.test(n)){group="2 BASSOONS"}else if(/alto flute|flute alto/.test(n)){group="FLUTE ALTO"}else if(/flute|flute|flute/.test(n)){group="2 FLUTES"}else if(/horn|cor en fa/.test(n)){group="4 HORNS";bank=banks[1]}else if(/trumpet|trompette/.test(n)){group="2 TRUMPETS";bank=banks[1]}else if(/bass trombone/.test(n)){group="BASS TROMBONE";bank=banks[1]}else if(/trombone|trombone/.test(n)){group="2 TROMBONES";bank=banks[1]}else if(/tuba/.test(n)){group="TUBA";bank=banks[1]}return {group:groups.includes(group)?group:"",bank}}
+async function xmlText(file){const buf=await file.arrayBuffer();if(!/\.mxl$/i.test(file.name))return new TextDecoder().decode(buf);const v=new DataView(buf);let eocd=-1;for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-65558);i--)if(v.getUint32(i,true)===0x06054b50){eocd=i;break}if(eocd<0)throw Error("Archive MXL invalide.");let count=v.getUint16(eocd+10,true),pos=v.getUint32(eocd+16,true),chosen=null,first=null;for(let k=0;k<count;k++){if(v.getUint32(pos,true)!==0x02014b50)break;let method=v.getUint16(pos+10,true),size=v.getUint32(pos+20,true),nl=v.getUint16(pos+28,true),el=v.getUint16(pos+30,true),cl=v.getUint16(pos+32,true),off=v.getUint32(pos+42,true),name=new TextDecoder().decode(new Uint8Array(buf,pos+46,nl));if(name.toLowerCase().endsWith(".xml")&&!name.toLowerCase().includes("container.xml")){if(!first)first={name,method,size,off};if(name.toLowerCase().includes("score"))chosen={name,method,size,off}}pos+=46+nl+el+cl}chosen=chosen||first;if(!chosen)throw Error("Aucun MusicXML trouvé dans le .mxl.");let lp=chosen.off,nn=v.getUint16(lp+26,true),ee=v.getUint16(lp+28,true),start=lp+30+nn+ee,raw=buf.slice(start,start+chosen.size);if(chosen.method===0)return new TextDecoder().decode(raw);if(chosen.method!==8||!window.DecompressionStream)throw Error("Ce navigateur ne peut pas décompresser cet export .mxl; exporte plutôt un .musicxml.");const stream=new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"));return await new Response(stream).text()}
+const LEVELS = {ppp:0, pp:12, p:28, mp:47, mf:76, f:99, ff:116, fff:127};
+const tick = q => Math.max(0, Math.round(q * 480));
+const clamp = v => Math.max(0, Math.min(127, Math.round(v)));
+const under = (el, tag) => Array.from(el.getElementsByTagName(tag));
+function writtenLevel(name) {
+  const s = clean(name).trim();
+  if (/^p{3,}$/.test(s)) return 0;
+  if (/^f{3,}$/.test(s)) return 127;
+  return LEVELS[s];
+}
+function readDirection(el, p, events) {
+  const staff = txt(el,'staff','1');
+  for (const dt of kids(el,'direction-type')) for (const item of kids(dt)) {
+    const tag = lname(item), words = clean(item.textContent || '').trim();
+    if (tag === 'wedge') events.push({p,staff,type:'wedge',mode:item.getAttribute('type'),number:item.getAttribute('number') || '1',niente:item.getAttribute('niente')==='yes'});
+    if (tag === 'words') {
+      events.push({p,staff,type:'words',words});
+      const mode = /\b(decresc|diminu|dim\b)/.test(words) ? 'diminuendo' : /\bcresc/.test(words) ? 'crescendo' : '';
+      if (mode) events.push({p,staff,type:'textRamp',mode});
+    }
+    const marks = tag==='dynamics' ? kids(item).map(x=>lname(x)==='other-dynamics'?x.textContent:lname(x)) : tag==='words' ? [words] : [];
+    for (const mark of marks) {
+      if (mark==='fp' || mark==='sfp') {
+        events.push({p,staff,type:'dyn',value:LEVELS.f},{p:p+1/32,staff,type:'dyn',value:LEVELS.p});
+      } else {
+        const value=writtenLevel(mark);
+        if(value!==undefined) events.push({p,staff,type:'dyn',value});
+      }
+    }
+  }
+}
+function joinTies(notes) {
+  const endings = new Map(), result = [];
+  for (const n of notes.sort((a,b)=>a.p-b.p)) {
+    const boundary = (t) => [t,n.pitch,n.unpitched].join('/');
+    const candidates = endings.get(boundary(tick(n.p))) || [];
+    const compatible = candidates.filter(c =>
+      (!c.instrument || !n.instrument || c.instrument === n.instrument) &&
+      (!c.number || !n.stopNumber || c.number === n.stopNumber));
+    const sameVoice = compatible.filter(c => c.voice === n.voice && c.staff === n.staff);
+    const pool = sameVoice.length ? sameVoice : compatible;
+    const previous = n.stop && pool.length === 1 ? pool[0] : null;
+    const bow = n.labels.some(x => x === 'Up Bow' || x === 'Down Bow');
+    let root = n;
+    if (previous) candidates.splice(candidates.indexOf(previous),1);
+    if (previous && !bow) {
+      root = previous.root;
+      root.d = n.p + n.d - root.p;
+    } else {
+      result.push(n);
+    }
+    if (n.start) {
+      const key = boundary(tick(n.p+n.d));
+      if (!endings.has(key)) endings.set(key,[]);
+      endings.get(key).push({root,voice:n.voice,staff:n.staff,instrument:n.instrument,number:n.startNumber});
+    }
+  }
+  return result;
+}
+function parseXML(text) {
+  const doc=new DOMParser().parseFromString(text,'application/xml');
+  if(doc.querySelector('parsererror')) throw Error('Le MusicXML est illisible.');
+  const definitions=new Map(under(doc,'score-part').map(sp=>[sp.getAttribute('id'),sp]));
+  const scoreTitle=(under(doc,'work-title')[0]?.textContent||under(doc,'movement-title')[0]?.textContent||'').trim();
+  const parts=[];
+  for(const part of under(doc,'part')) {
+    const id=part.getAttribute('id'), def=definitions.get(id), name=txt(def,'part-name',id);
+    const instrumentNames=Object.fromEntries(kids(def,'score-instrument').map(x=>[x.getAttribute('id'),txt(x,'instrument-name','')]));
+    const drums=new Map(kids(def,'midi-instrument').map(x=>[x.getAttribute('id'),Number(txt(x,'midi-unpitched',0))-1]));
+    const notes=[], events=[], bars=[], slurs=new Set(), transpose=new Map();
+    let div=1, base=0, meter=4, fifths=0;
+    for(const measure of kids(part,'measure')) {
+      let cursor=0, span=0, previous=0;
+      const acc=new Map();
+      bars.push({number:measure.getAttribute('number'),p:base});
+      for(const el of kids(measure)) {
+        const tag=lname(el);
+        if(tag==='attributes') {
+          div=Number(txt(el,'divisions',div));
+          for(const tr of kids(el,'transpose')) transpose.set(tr.getAttribute('number')||'*',Number(txt(tr,'chromatic',0))+12*Number(txt(tr,'octave-change',0)));
+          const key=one(el,'key'); if(key) fifths=Number(txt(key,'fifths',0));
+          const time=one(el,'time');
+          if(time) {
+            const beats=txt(time,'beats').split('+').reduce((a,x)=>a+Number(x),0), unit=Number(txt(time,'beat-type',4));
+            if(beats && unit) {meter=4*beats/unit; events.push({p:base+cursor,type:'meter',beats,unit});}
+          }
+        }
+        if(tag==='direction' || tag==='sound') {
+          const p=base+cursor+Number(txt(el,'offset',0))/div;
+          if(tag==='direction') readDirection(el,p,events);
+          const sound=tag==='sound'?el:one(el,'sound'), tempo=Number(sound?.getAttribute('tempo'));
+          if(tempo>0) events.push({p,type:'tempo',value:tempo});
+        }
+        if(tag==='forward' || tag==='backup') cursor+=(tag==='forward'?1:-1)*Number(txt(el,'duration',0))/div;
+        if(tag==='note') {
+          const chord=!!one(el,'chord'), grace=!!one(el,'grace'), start=chord?previous:cursor;
+          const dur=grace?0.10:Number(txt(el,'duration',0))/div;
+          const staff=txt(el,'staff','1'), voice=txt(el,'voice','1'), instrument=one(el,'instrument')?.getAttribute('id')||'';
+          const p=base+start, pitched=one(el,'pitch'), unpitched=!!one(el,'unpitched');
+          let pitch=notePitch(el);
+          if(pitch!==null) {
+            const trans=pitched?(transpose.get(staff)??transpose.get('*')??0):0;
+            pitch=clamp(unpitched && drums.get(instrument)>=0?drums.get(instrument):pitch+trans);
+            const labels=noteLabels(el);
+            const arpeggio=under(el,'arpeggiate')[0];
+            const roll=arpeggio?{number:arpeggio.getAttribute('number')||'1',direction:arpeggio.getAttribute('direction')||'up'}:null;
+            if(under(el,'spiccato').length) labels.push('Spiccato');
+            const slurKey=staff+'/'+voice;
+            const slur=under(el,'slur');
+            if(slur.some(x=>x.getAttribute('type')==='start')) slurs.add(slurKey);
+            if(slurs.has(slurKey)) labels.push('Legato');
+            if(slur.some(x=>x.getAttribute('type')==='stop')) slurs.delete(slurKey);
+            const notatedTies=under(el,'tied');
+            const tieNumber=type=>notatedTies.find(x=>[type,'continue'].includes(x.getAttribute('type')))?.getAttribute('number');
+            const ties=[...kids(el,'tie'),...notatedTies].map(x=>x.getAttribute('type'));
+            let trill=null;
+            if(pitched) {
+              const steps='CDEFGAB', sem=[0,2,4,5,7,9,11], step=txt(pitched,'step'), i=steps.indexOf(step), j=(i+1)%7;
+              const oct=Number(txt(pitched,'octave')), upperOct=oct+(j===0?1:0), upper=steps[j];
+              const signature=(fifths<0?'BEADGCF':'FCGDAEB').slice(0,Math.abs(fifths)).includes(upper)?Math.sign(fifths):0;
+              const mark=under(el,'accidental-mark')[0]?.textContent?.trim();
+              const alteration=({flat:-1,natural:0,sharp:1,'double-flat':-2,'double-sharp':2})[mark]??acc.get(staff+upper+upperOct)??signature;
+              if(labels.includes('Trille')) trill=clamp((upperOct+1)*12+sem[j]+alteration+trans);
+              acc.set(staff+step+oct,Number(txt(pitched,'alter',0)));
+            }
+            notes.push({p,d:dur,pitch,trans,roll,startNumber:tieNumber('start'),stopNumber:tieNumber('stop'),labels,voice,staff,instrument,start:ties.includes('start')||ties.includes('continue'),stop:ties.includes('stop')||ties.includes('continue'),accent:labels.some(x=>['Accent','Marcato','Sforzando'].includes(x)),trill,unpitched});
+          }
+          if(!chord) previous=start;
+          if(!chord && !grace) cursor+=dur;
+          if(!grace) span=Math.max(span,start+dur);
+        }
+        span=Math.max(span,cursor);
+      }
+      base+=measure.getAttribute('implicit')==='yes'?span:Math.max(span,meter);
+    }
+    const words=events.filter(x=>x.type==='words').sort((a,b)=>a.p-b.p), bow=new Map(); let wi=0;
+    for(const n of notes.sort((a,b)=>a.p-b.p)){
+      while(wi<words.length && words[wi].p<=n.p+1e-7){const w=words[wi++]; if(/\bpizz/.test(w.words))bow.set(w.staff,'Pizzicato'); if(/\b(arco|ord)/.test(w.words))bow.delete(w.staff);}
+      if(bow.has(n.staff)) n.labels.push(bow.get(n.staff));
+    }
+    parts.push({id,name,scoreTitle,instrumentNames,notes:joinTies(notes),events,end:base,bars});
+  }
+  return parts;
+}
+function curve(part,staff) {
+  const events=part.events.filter(e=>e.staff===staff).sort((a,b)=>a.p-b.p);
+  const marks=new Map([[0,LEVELS.mf]]), opens=new Map(), spans=[];
+  for(const e of events) if(e.type==='dyn') marks.set(tick(e.p),e.value);
+  for(const e of events) {
+    if(e.type==='wedge') {
+      if(['crescendo','diminuendo'].includes(e.mode)) opens.set(e.number,e);
+      if(e.mode==='stop' && opens.has(e.number)){spans.push([opens.get(e.number),e.p,e.niente]); opens.delete(e.number);}
+    }
+    if(e.type==='textRamp' && !events.some(x=>x.type==='wedge' && tick(x.p)===tick(e.p) && x.mode===e.mode)){
+      const finish=events.find(x=>x.p>e.p && ['dyn','textRamp','wedge'].includes(x.type));
+      spans.push([e,finish?.p??Math.min(part.end,e.p+4),false]);
+    }
+  }
+  for(const e of opens.values())spans.push([e,part.end,false]);
+  const notation=new Map(marks), last=(t)=>[...marks].filter(([p])=>p<=t).sort((a,b)=>b[0]-a[0])[0][1];
+  for(const [e,end,niente] of spans.sort((a,b)=>a[0].p-b[0].p)){
+    let a=tick(e.p), b=tick(end); if(b<=a)continue;
+    const sign=e.mode==='crescendo'?1:-1;
+    let from=e.niente && sign>0?0:last(a);
+    // An earlier unlabelled hairpin may already have reached the MIDI ceiling.
+    // Give the next gesture room when there is no written dynamic at its onset.
+    if(!notation.has(a) && ((sign>0 && from===127) || (sign<0 && from===0)))
+      from=clamp(from-sign*24);
+    const near=[...notation].find(([p,v])=>p>=b && p<=b+480 && sign*(v-from)>0);
+    const endMark=notation.get(b);
+    const lastInterior=[...notation].filter(([p])=>p>a && p<b).at(-1);
+    const baseline=lastInterior?.[1]??from;
+    // A soft sign at the next attack can immediately follow a loud crescendo peak.
+    const reset=endMark!==undefined && sign*(endMark-baseline)<=0;
+    const targetTime=reset?Math.max(a,b-1):b;
+    const dest=niente && sign<0 ? 0 : (!reset && endMark!==undefined ? endMark :
+      (near && sign*(near[1]-baseline)>0 ? near[1] : clamp(baseline+sign*38)));
+    const anchors=[[a,from],...[...notation].filter(([p])=>p>a && p<targetTime).sort((x,y)=>x[0]-y[0]),[targetTime,dest]];
+    for(let i=1;i<anchors.length;i++){
+      const [p,v]=anchors[i-1],[q,w]=anchors[i];
+      if(q<=p)continue;
+      const count=Math.min(q-p,Math.max(Math.abs(w-v),Math.ceil((q-p)/30)));
+      let previous;
+      for(let k=0;k<=count;k++){
+        const x=k/count;
+        const shape=x+0.60*x*(1-x)*(1-2*x);
+        const value=clamp(v+(w-v)*shape);
+        if(value!==previous)marks.set(Math.round(p+(q-p)*x),value);
+        previous=value;
+      }
+    }
+    if(reset)marks.set(b,endMark);
+  }
+  return [...marks].sort((a,b)=>a[0]-b[0]);
+}
+function notePitch(n){let p=one(n,"pitch");if(!p){const u=one(n,"unpitched");if(!u)return null;p=u}let step=txt(p,"step",txt(p,"display-step")),oct=Number(txt(p,"octave",txt(p,"display-octave","4"))),a=Number(txt(p,"alter",0));let sem={C:0,D:2,E:4,F:5,G:7,A:9,B:11}[step];return sem===undefined?null:Math.max(0,Math.min(127,Math.round((oct+1)*12+sem+a)))}
+function noteLabels(n){let o=[];for(const e of Array.from(n.getElementsByTagName("articulations")))for(const x of kids(e)){let t=lname(x);if(t==="staccato")o.push("Staccato");if(t==="staccatissimo")o.push("Staccatissimo");if(t==="accent")o.push("Accent");if(t==="strong-accent")o.push("Marcato");if(t==="tenuto")o.push("Tenuto")}for(const e of Array.from(n.getElementsByTagName("technical")))for(const x of kids(e)){let t=lname(x);if(t.includes("pizzicato"))o.push("Pizzicato");if(t.includes("harmonic"))o.push("Harmonic");if(t.includes("up-bow"))o.push("Up Bow");if(t.includes("down-bow"))o.push("Down Bow");if(t.includes("snap-pizzicato"))o.push("Pizzicato Bartók");if(t.includes("vibrato"))o.push("Vibrato");if(t.includes("portamento"))o.push("Portamento");if(t.includes("flutter"))o.push("Flutter tongue");if(t.includes("double tongue"))o.push("Double tongue")}for(const x of Array.from(n.getElementsByTagName("other-technical"))){let t=clean(x.textContent);if(t.includes("vibrato"))o.push("Vibrato");if(t.includes("portamento"))o.push("Portamento");if(t.includes("flutter"))o.push("Flutter tongue");if(t.includes("double tongue"))o.push("Double tongue")}if(n.getElementsByTagName("trill-mark").length)o.push("Trille");if(n.getElementsByTagName("tremolo").length)o.push("Tremolo");if(n.getElementsByTagName("fermata").length)o.push("Tenuto");return o}
+function laneFor(labels,group){let a=labels.map(clean).join(" ");if(/bartok|pizz/.test(a))return "Pizzicato";if(/trille/.test(a))return "Trills";if(/tremolo/.test(a))return "Tremolo";if(/harmonic/.test(a))return "Harmonics";if(/flutter/.test(a))return "Flutter";if(/double tongue/.test(a))return "Double Tongue";if(/staccato|staccatissimo|spiccato/.test(a))return "Shorts";if(/marcato|sforzando/.test(a))return "Marcato";return "Longs"}
+function findRow(group,lane,bank){let rows=assignments.filter(x=>x.instrument_group===group&&x.lane.toLowerCase()===lane.toLowerCase());if(!rows.length&&lane==="Tremolo")rows=assignments.filter(x=>x.instrument_group===group&&/Tremolo|Repetition/i.test(x.lane));if(!rows.length&&lane==="Harmonics")rows=assignments.filter(x=>x.instrument_group===group&&/Harmonic/i.test(x.lane));return rows.find(x=>{let s=x.articulation_set||"";return bank.includes("Strings")?s.startsWith("CSS"):bank.includes("Brass")?s.startsWith("CSB"):bank.includes("Woodwinds")?s.startsWith("CSW"):false})||rows[0]||null}
+function chooseArt(setName,labels,lane){let list=sets[setName]?.articulations||[];if(!list.length || (setName==="CSB Legato" && lane!=="Longs") || (setName==="CSW Trills" && lane!=="Trills"))return null;let a=labels.map(clean).join(" "),want="";if(setName==="CSB Legato")want=/legato/.test(a)?"Legato":"Sustain";else if(setName==="CSS Pizz")want=/bartok/.test(a)?"Bartok Snap":/col legno/.test(a)?"Col Legno":"Pizzicato";else if(/Shorts/.test(setName))want=/spiccato/.test(a)?"Spiccato":/staccatissimo/.test(a)?"Staccatissimo":"Staccato";else if(/Trills/.test(setName))want="Legato On";else if(/Longs/.test(setName))want=/legato/.test(a)?(setName==="CSS Longs"?"Legato (Low Latency)":"Legato"):"Sustain";else if(/Muted/.test(setName))want="Sustain Long";else if(/Marcato/.test(setName))want="Leg On";return list.find(x=>clean(x.Name)===clean(want))||null}
+function actionEvents(art,ch,tick,ev){for(const o of art?.Output||[]){let n=o.MB1??58,v=o.ValueLow??(String(o.Status).toLowerCase().includes("note")?100:0);if(String(o.Status).toLowerCase().includes("controller"))ev.push({t:tick,p:-20,b:[0xb0|ch,n,v]});else if(String(o.Status).toLowerCase().includes("note")){ev.push({t:tick,p:-19,b:[0x90|ch,n,Math.max(1,v)]},{t:tick+1,p:-18,b:[0x80|ch,n,0]})}}}
+function vlq(v){v=Math.max(0,Math.floor(v));let a=[v&127];while((v>>=7)){a.unshift((v&127)|128)}return a}
+function midiTrack(name,events){let nm=[...new TextEncoder().encode(name)],E=[{t:0,p:-100,b:[255,3,...vlq(nm.length),...nm]},...events];E.sort((a,b)=>a.t-b.t||a.p-b.p);let data=[],last=0;for(const e of E){let delta=Math.max(0,e.t-last);data.push(...vlq(delta),...e.b);last=e.t}data.push(0,255,47,0);return [77,84,114,107,...u32(data.length),...data]}
+function u32(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255]}
+function tomTarget(name){
+  if(/basse|bass|very low|4|5/i.test(name))return 'Tom Very Low';
+  if(/high|aigu|1/i.test(name))return 'Tom High';
+  if(/medium|moyen|2/i.test(name))return 'Tom Medium';
+  if(/low|grave|3/i.test(name))return 'Tom Low';
+  return 'Tom Ensemble';
+}
+function trackDelay(row,longMode){
+  if(!row)return {ms:null,basis:'Autre banque : réglage conservé'};
+  const section=row.section||(row.articulation_set?.startsWith('CSS')?'STRINGS':row.articulation_set==='CSB Legato'?'BRASS':'WOODWINDS');
+  if(longMode==='sustain')return {ms:0,basis:'Sustain : point de départ estimé, attaque à vérifier'};
+  if(row.lane==='Longs'){
+    return {ms:section==='STRINGS'?-250:section==='WOODWINDS'?-130:-100,basis:'Transition du manuel ; vélocité 80, accents 86 dans la même zone de vitesse'};
+  }
+  if(/Shorts|Pizzicato|Measured/i.test(row.lane))return {ms:-60,basis:'Shorts : référence du manuel ; pizzicato et répétitions mesurées : estimation'};
+  if(section==='BRASS' && row.lane==='Marcato')return {ms:-100,basis:'Marcato rapide du manuel, vélocité 80'};
+  if(row.lane==='Muted')return {ms:0,basis:'Sustain avec sourdine : point de départ estimé'};
+  return {ms:-60,basis:'Point de départ estimé pour cette articulation, à affiner à l’écoute'};
+}
+function repetitionArt(notes,index,row,parts){
+  if(row?.section!=='BRASS' || row.lane!=='Shorts')return null;
+  const n=notes[index], start=tick(n.p);
+  const tempos=conductor(parts).filter(e=>e.b[1]===81);
+  const e=tempos.filter(e=>e.t<=start).sort((a,b)=>a.t-b.t).at(-1);
+  const us=e?e.b[3]*65536+e.b[4]*256+e.b[5]:500000;
+  if(n.d>.75)return null;
+  const matches=o=>o && o.pitch===n.pitch && tick(o.p)!==start && Math.abs(o.p-n.p)<=.5+1/480 && Math.abs(o.p-n.p)*us/1000<=500 && Math.abs(o.p-n.p)>0;
+  const sameVoice=notes.filter(o=>o.source===n.source && o.voice===n.voice);
+  const starts=[...new Set(sameVoice.map(o=>tick(o.p)))].sort((a,b)=>a-b);
+  const i=starts.indexOf(start);
+  let count=1;
+  for(const direction of [-1,1]){
+    let previous=n;
+    for(let j=i+direction;j>=0 && j<starts.length;j+=direction){
+      const other=sameVoice.find(o=>tick(o.p)===starts[j] && o.pitch===n.pitch);
+      if(!other || Math.abs(other.p-previous.p)>.5+1/480 ||
+        Math.abs(other.p-previous.p)*us/1000>500 || other.d>.75)break;
+      count++;previous=other;
+    }
+  }
+  if(count<3)return null;
+  return (sets[row.articulation_set]?.articulations||[]).find(a=>/^repetitions?$/i.test(clean(a.Name)))||null;
+}
+function percussivePart(part){
+  return part.notes.some(n=>n.unpitched) || /piano|harp|harpe|celest|célest|marimba|vibraph|xyloph|glock|crotal|tubular bell|chimes|percussion|drum|cymbal|tam[- ]?tam|gong|toms|brake|wood.?block|tambour|triang|castanet|shaker|claves|timpani|timbale/i.test(part.name);
+}
+function accentRole(note,part,choice){
+  if(percussivePart(part) || !note.accent ||
+    laneFor(note.labels,choice.group)!=='Longs' || !findRow(choice.group,'Longs',choice.bank))return null;
+  return 'legato-accent';
+}
+function scoreClock(parts){
+  const tempos=conductor(parts).filter(e=>e.b[1]===81).sort((a,b)=>a.t-b.t);
+  const segments=[{t:0,ms:0,rate:500/480}];
+  for(const e of tempos){
+    const previous=segments.at(-1), rate=(e.b[3]*65536+e.b[4]*256+e.b[5])/480000;
+    const segment={t:e.t,ms:previous.ms+(e.t-previous.t)*previous.rate,rate};
+    if(e.t===previous.t)segments[segments.length-1]=segment;else segments.push(segment);
+  }
+  const ms=t=>{const s=segments.findLast(s=>s.t<=t)||segments[0];return s.ms+(t-s.t)*s.rate;};
+  const at=value=>{const s=segments.findLast(s=>s.ms<=value)||segments[0];return Math.round(s.t+(value-s.ms)/s.rate);};
+  return {ms,at,after:(t,value)=>at(ms(t)+value)};
+}
+function compensateStringTiming(notes,parts,lane,written){
+  const delay=-trackDelay(lane.row,lane.longMode).ms, clock=scoreClock(parts), report=[];
+  const timing=written.map(current=>{
+    const {note,start,end}=current;
+    const voice=written.filter(o=>note.performanceVoice!==undefined?o.note.performanceVoice===note.performanceVoice:o.note.source===note.source && o.note.voice===note.voice);
+    const previous=voice.filter(o=>o.start<start).at(-1), next=voice.find(o=>o.start>start);
+    const mono=!written.some(o=>o!==current && o.note.pitch!==note.pitch && o.start<=start && o.end>start);
+    const transition=mono && previous && previous.end>=start-1 && previous.note.pitch!==note.pitch;
+    const gap=previous?clock.ms(start)-clock.ms(previous.start):Infinity;
+    const rapid=transition && lane.choice.fastStringTiming!==false && gap<delay+40;
+    const latency=transition?(rapid?100:delay):0;
+    note.fastLegato=!!rapid;
+    return {...current,voice,next,latency,rapid,desired:clock.after(start,delay-latency)};
+  });
+  // Work backwards so no correction can pass the next actual attack.
+  for(let i=timing.length-1;i>=0;i--){
+    const t=timing[i];
+    const same=timing.filter(o=>o.start>t.start && (t.note.performanceVoice!==undefined?o.note.performanceVoice===t.note.performanceVoice:o.note.source===t.note.source && o.note.voice===t.note.voice))[0];
+    t.nextTiming=same;
+    t.performed=same?Math.min(t.desired,Math.max(t.start,clock.after(same.performed,-20))):t.desired;
+  }
+  for(const t of timing){
+    const {note,start,end,performed,nextTiming:next}=t;
+    const shiftMs=clock.ms(performed)-clock.ms(start);
+    let release=clock.after(end,shiftMs);
+    if(next && Math.abs(end-next.start)<=1){
+      release=next.note.pitch===note.pitch?clock.after(next.performed,-10):clock.after(next.performed,60);
+      release=Math.min(release,clock.after(next.end,clock.ms(next.performed)-clock.ms(next.start))-1);
+    }else if(next)release=Math.min(release,clock.after(next.performed,-10));
+    note.p=performed/480;note.d=Math.max(1,release-performed)/480;
+    if(performed!==start || t.rapid)report.push({writtenTick:start,performedTick:performed,pitch:note.pitch,
+      requestedMs:delay-t.latency,appliedMs:Math.round(shiftMs*1000)/1000,capped:performed<t.desired,
+      expectedLatencyMs:t.latency,fastLegato:t.rapid,kind:t.latency?'legato-transition':'fresh-attack'});
+  }
+  return report;
+}
+function compensatePhraseStarts(notes,parts,lane,written){
+  const delay=trackDelay(lane.row,lane.longMode).ms;
+  if(!(delay<0) || lane.lane!=='Longs' || lane.longMode==='sustain' || lane.percussive)return [];
+  if(lane.row?.section==='STRINGS' && lane.longMode==='legato')return compensateStringTiming(notes,parts,lane,written);
+  const clock=scoreClock(parts), report=[];
+  for(const current of written){
+    const {note,start,end}=current;
+    const voice=written.filter(o=>note.performanceVoice!==undefined?
+      o.note.performanceVoice===note.performanceVoice:o.note.source===note.source && o.note.voice===note.voice);
+    // Use the score, not the added 60 ms overlap or the 10 ms retrigger gap.
+    const previous=voice.filter(o=>o.start<start);
+    if(previous.some(o=>o.end>=start-1 && o.note.pitch!==note.pitch))continue;
+    if(written.some(o=>o!==current && o.start<=start && o.end>start))continue;
+    const next=voice.find(o=>o.start>start);
+    const requested=clock.after(start,-delay);
+    // A first note cannot be moved beyond the following MIDI attack. Very
+    // short starts need an audible attack before the next legato transition.
+    const connected=next && Math.abs(end-next.start)<=1;
+    const nextReattack=next && (!connected || next.note.pitch===note.pitch);
+    const nextAttack=next?clock.after(next.start,nextReattack?-delay:0):Infinity;
+    const latest=next?Math.max(start,clock.after(nextAttack,-20)):Infinity;
+    const performed=Math.min(requested,latest);
+    const shift=performed-start;
+    let release=tick(note.p+note.d);
+    if(connected && nextReattack)release=clock.after(nextAttack,-10);
+    else if(!connected){
+      release=clock.after(end,clock.ms(performed)-clock.ms(start));
+      if(next)release=Math.min(release,clock.after(nextAttack,-10));
+    }
+    note.p=performed/480;
+    note.d=Math.max(1,release-performed)/480;
+    report.push({writtenTick:start,performedTick:performed,pitch:note.pitch,requestedMs:-delay,
+      appliedMs:Math.round((clock.ms(performed)-clock.ms(start))*1000)/1000,capped:performed<requested,kind:previous.some(o=>o.end>=start-1 && o.note.pitch===note.pitch)?'repeated-attack':'phrase-start'});
+  }
+  return report;
+}
+function rolledNotes(part,parts){
+  const notes=part.notes.map(n=>({...n})), chords=new Map();
+  for(const note of notes){
+    if(!note.roll)continue;
+    const key=tick(note.p)+'/'+note.roll.number;
+    if(!chords.has(key))chords.set(key,[]);
+    chords.get(key).push(note);
+  }
+  const tempos=conductor(parts).filter(e=>e.b[1]===81).sort((a,b)=>a.t-b.t);
+  for(const chord of chords.values()){
+    if(chord.length<2)continue;
+    const p=chord[0].p, t=tick(p);
+    const e=tempos.findLast(e=>e.t<=t);
+    const us=e?e.b[3]*65536+e.b[4]*256+e.b[5]:500000;
+    const quarterMs=us/1000;
+    const next=part.notes.find(n=>tick(n.p)>t);
+    const room=Math.min(...chord.map(n=>n.d),next?next.p-p:Infinity)*0.45;
+    const total=Math.min((chord.length-1)*30/quarterMs,240/quarterMs,room);
+    const down=chord.some(n=>n.roll.direction==='down');
+    chord.sort((a,b)=>down?b.pitch-a.pitch:a.pitch-b.pitch);
+    chord.forEach((note,i)=>{
+      const delay=total*i/(chord.length-1);
+      note.p+=delay;
+      note.d=Math.max(1/480,note.d-delay);
+    });
+  }
+  return notes;
+}
+function preparedLanes(parts,choices){
+  const lanes=new Map();
+  parts.forEach((part,index)=>{
+    const choice=choices[index], group=choice.group;
+    const contra=/contrabass clarinet|clarinette contrebasse|clarinette contre-basse/i.test(clean(part.name));
+    const choir=/^(soprano|alto|tenor|bass|basse)$/i.test(clean(part.name).trim());
+    const whistle=/tin whistle/i.test(part.name);
+    const family=choir?'CHOIR':whistle?'TIN WHISTLE':group||part.id;
+    for(const note of rolledNotes(part,parts)){
+      note.accentRole=accentRole(note,part,choice);
+      const tomDestination=/^toms?$/i.test(part.name)?tomTarget(part.instrumentNames?.[note.instrument]||''):null;
+      const lane=group||contra?laneFor(note.labels,group):'Partition';
+      const key=[family,choice.bank,choice.octave||'template',lane,tomDestination||''].join('/');
+      if(!lanes.has(key)){
+        const row=group?findRow(group,lane,choice.bank):null;
+        lanes.set(key,{name:(choir?'Chœur SATB':group?group:part.name)+' — '+(row?.lane||lane),
+          sourceName:part.name+' — '+(row?.lane||lane), row,lane,group,whistle,choir,choice,contra,tomDestination,percussive:percussivePart(part),timpani:/timpani|timbales?/i.test(part.name),notes:[],sources:[]});
+      }
+      const target=lanes.get(key);
+      let source=target.sources.find(s=>s.part===part && s.staff===note.staff);
+      if(!source){
+        const staff=part.events.some(e=>e.type==='dyn' && e.staff===note.staff)?note.staff:'1';
+        source={part,staff:note.staff,points:curve(part,staff)};target.sources.push(source);
+      }
+      const offset=note.unpitched?0:(choice.octave==='template'||choice.octave===undefined?templateOffset(note,group,part.name):Number(choice.octave));
+      target.notes.push({...note,pitch:clamp(note.pitch+offset),trill:note.trill===null?null:clamp(note.trill+offset),source});
+    }
+  });
+  const arranged=[...lanes.values()];
+  return arranged.filter(l=>l.notes.length).flatMap(splitLongLane);
+}
+function splitLongLane(lane){
+  if(lane.lane!=='Longs' || lane.choice.splitLongs===false || !lane.row)return [lane];
+  const row=lane.row;
+  const unique=new Map();
+  for(const n of lane.notes){
+    const key=tick(n.p)+'/'+n.pitch;
+    const identity=n.source.part.id+'/'+n.staff+'/'+n.voice;
+    const prior=unique.get(key);
+    if(prior){prior.d=Math.max(prior.d,n.d);prior.origins.add(identity);prior.accent ||= n.accent;}
+    else unique.set(key,{...n,origins:new Set([identity])});
+  }
+  const notes=[...unique.values()].sort((a,b)=>a.p-b.p || a.pitch-b.pitch);
+  // Connected written overlaps stay together. Any component requiring three
+  // simultaneous pitches uses Sustain, preserving held notes without slicing them.
+  const components=[];let component=[],end=-Infinity;
+  for(const n of notes){
+    if(tick(n.p)>=end){if(component.length)components.push(component);component=[];end=-Infinity;}
+    component.push(n);end=Math.max(end,tick(n.p+n.d));
+  }
+  if(component.length)components.push(component);
+  const lists={legato1:[],legato2:[],sustain:[]};
+  const tails=[null,null];
+  for(const component of components){
+    const poly=component.some(n=>new Set(component.filter(o=>tick(o.p)<=tick(n.p) && tick(o.p+o.d)>tick(n.p)).map(o=>o.pitch)).size>2);
+    if(poly){lists.sustain.push(...component);continue;}
+    for(const n of component){
+      const available=[0,1].filter(i=>!tails[i] || tick(tails[i].p+tails[i].d)<=tick(n.p));
+      if(!available.length)throw Error('Impossible de répartir les deux voix sans couper une note.');
+      available.sort((a,b)=>{
+        const score=i=>!tails[i]?1000+i:([ ...n.origins ].some(id=>tails[i].origins.has(id))?0:200)+
+          (Math.abs(tick(tails[i].p+tails[i].d)-tick(n.p))<=1?-500:0)+Math.abs(n.pitch-tails[i].pitch)+i/100;
+        return score(a)-score(b);
+      });
+      const i=available[0];n.performanceVoice=i;lists['legato'+(i+1)].push(n);tails[i]=n;
+    }
+  }
+  const expressive=(sets[row.articulation_set]?.articulations||[]).some(a=>/legato expressif/i.test(a.Name));
+  return Object.entries(lists).filter(([,notes])=>notes.length).map(([longVoice,notes])=>({...lane,row,notes,
+    longMode:longVoice==='sustain'?'sustain':'legato',longVoice,baseName:lane.name,
+    name:lane.name+' — '+(longVoice==='sustain'?'Sustain':(expressive?'Legato expressif ':'Legato ')+longVoice.slice(-1))}));
+}
+function levelAt(points,t){return points.findLast(x=>x[0]<=t)?.[1]??LEVELS.mf;}
+function laneCurve(lane){
+  const boundaries=new Set([0]);
+  for(const source of lane.sources)for(const [t] of source.points)boundaries.add(t);
+  for(const n of lane.notes){boundaries.add(tick(n.p));boundaries.add(tick(n.p+n.d));}
+  let previous=-1;const result=[];
+  for(const t of [...boundaries].sort((a,b)=>a-b)){
+    const active=lane.notes.filter(n=>tick(n.p)<=t && tick(n.p+n.d)>t);
+    const values=active.map(n=>levelAt(n.source.points,t));
+    const value=values.length?Math.max(...values):levelAt(lane.sources[0].points,t);
+    if(value!==previous){result.push([t,value]);previous=value;}
+  }
+  return result;
+}
+function longModes(notes,row,lane,forcedMode=null){
+  if(!row || lane!=='Longs')return [];
+  const times=[...new Set(notes.flatMap(n=>[tick(n.p),tick(n.p+n.d)]))].sort((a,b)=>a-b);
+  const modes=[];let last=null;
+  for(const t of times){
+    const active=notes.filter(n=>tick(n.p)<=t && tick(n.p+n.d)>t);
+    if(!active.length)continue;
+    const poly=forcedMode==='sustain' || (forcedMode!=='legato' && new Set(active.map(n=>n.pitch)).size>1);
+    const labels=poly?[]:[...active[0].labels,'Legato'];
+    const normal=chooseArt(row.articulation_set,labels,lane);
+    const muted=/sordino/i.test(normal?.Name||'');
+    const expressive=(sets[row.articulation_set]?.articulations||[]).find(a=>/legato expressif/i.test(a.Name) && /sordino/i.test(a.Name)===muted);
+    const art=!poly && expressive?expressive:normal;
+    if(art && art.ID!==last){modes.push({t,art,poly});last=art.ID;}
+  }
+  return modes;
+}
+function overlapLegato(notes,modes,parts,lane){
+  if(lane.longMode==='sustain' || lane.percussive || (!lane.whistle && !lane.choir && lane.lane!=='Longs'))return;
+  const tempos=conductor(parts).filter(e=>e.b[1]===81).sort((a,b)=>a.t-b.t);
+  const original=notes.map(note=>({note,start:tick(note.p),end:tick(note.p+note.d)}));
+  const written=(lane.allWrittenNotes||notes).map(note=>({note,start:tick(note.p),end:tick(note.p+note.d)}));
+  const short=n=>n.labels.some(label=>['Staccato','Staccatissimo','Spiccato'].includes(label));
+  for(const {note:n,start,end} of original){
+    if(short(n))continue;
+    const next=original.find(other=>other.start>start && (n.performanceVoice!==undefined?other.note.performanceVoice===n.performanceVoice:other.note.source===n.source && other.note.voice===n.voice));
+    if(!next || short(next.note) || Math.abs(end-next.start)>1)continue;
+    // Test the written intervals, before adding any performance overlap.
+    if(written.some(other=>other.note.pitch!==n.pitch && other.start<end && other.end>start))continue;
+    const state=modes.findLast(m=>m.t<=next.start);
+    if(state && (state.poly || !/legato/i.test(state.art.Name)))continue;
+    const tempo=tempos.findLast(e=>e.t<=next.start);
+    const us=tempo?tempo.b[3]*65536+tempo.b[4]*256+tempo.b[5]:500000;
+    if(next.note.pitch===n.pitch){
+      // Retrigger repeated pitches; never alter either written onset.
+      const gap=Math.max(1,Math.round(10*480000/us));
+      n.d=Math.max(1,next.start-gap-start)/480;
+      continue;
+    }
+    const overlap=Math.max(1,Math.round(60*480000/us));
+    const repeat=original.find(other=>other.start>start && other.note.pitch===n.pitch);
+    const limit=Math.min(next.start+overlap,next.end-1,repeat?repeat.start-1:Infinity);
+    if(written.some(other=>other.note.pitch!==next.note.pitch && other.start<limit && other.end>end))continue;
+    if(limit>end)n.d=(limit-start)/480;
+  }
+}
+function midiFile(tracks,format=1){
+  const header=[77,84,104,100,0,0,0,6,0,format,tracks.length>>8,tracks.length&255,1,224];
+  const result=new Uint8Array(header.length+tracks.reduce((sum,t)=>sum+t.length,0));
+  result.set(header); let offset=header.length;
+  for(const t of tracks){result.set(t,offset);offset+=t.length;}
+  return result;
+}
+function conductor(parts){
+  const entries=new Map();
+  for(const part of parts) for(const e of part.events){
+    const t=tick(e.p);
+    if(e.type==='tempo'){
+      const us=Math.round(60000000/e.value);
+      entries.set('t'+t,{t,p:-50,b:[255,81,3,(us>>16)&255,(us>>8)&255,us&255]});
+    }
+    if(e.type==='meter')entries.set('m'+t,{t,p:-50,b:[255,88,4,e.beats,Math.round(Math.log2(e.unit)),24,8]});
+  }
+  return [...entries.values()];
+}
+// In the example profile these three octave instruments take the written register.
+function templateOffset(note,group,name=''){
+  if(/tin whistle/i.test(name))return -12;
+  if(group==='BASS TROMBONE' || group==='TUBA' || /timpani|timbales?/i.test(name))return 12;
+  if(group==='PICCOLO' && note.trans===12)return -12;
+  if(['CONTRABASSOON','DOUBLEBASSES'].includes(group) && note.trans===-12)return 12;
+  return 0;
+}
+function expression(value){
+  // Keep headroom in soft sustains while letting upper dynamics reach full gain.
+  return clamp(127*Math.pow(value/127,0.72));
+}
+function smoothController(points,notes,parts,anchors=points.filter((p,i)=>i && Math.abs(p[1]-points[i-1][1])>1).map(p=>p[0])){
+  // Round only the jumps, retaining the written hairpins and target times.
+  // Work on controller copies: struck-note velocities keep the written levels.
+  const clock=scoreClock(parts), result=[], changes=[];
+  for(let i=0;i<points.length;i++){
+    const [t,value]=points[i], previous=points[i-1];
+    if(!previous || t===0 || Math.abs(value-previous[1])<=1){result.push([t,value]);continue;}
+    const preceding=notes.filter(n=>tick(n.p)<t).sort((a,b)=>
+      Math.min(t,tick(b.p+b.d))-Math.min(t,tick(a.p+a.d)) || b.p-a.p)[0];
+    const noteStart=preceding?tick(preceding.p):0;
+    const duration=preceding?clock.ms(tick(preceding.p+preceding.d))-clock.ms(noteStart):600;
+    const windowMs=Math.min(350,Math.max(30,duration*.35));
+    // Preserve actual notated dynamics, not intermediate hairpin samples.
+    // In particular a peak one tick before a soft sign must not force a jump.
+    const protectedTime=anchors.filter(a=>a<t).reduce((a,b)=>Math.max(a,b),0);
+    const start=Math.max(protectedTime,noteStart,clock.after(t,-windowMs),0);
+    if(start>=t){result.push([t,value]);continue;}
+    const from=levelAt(result,start);
+    while(result.length && result.at(-1)[0]>=start)result.pop();
+    result.push([start,from]);
+    const count=Math.min(t-start,Math.max(Math.abs(value-from),Math.ceil((clock.ms(t)-clock.ms(start))/12)));
+    let last=from;
+    for(let k=1;k<=count;k++){
+      const x=k/count, rounded=clamp(from+(value-from)*x*x*(3-2*x));
+      if(rounded!==last || k===count)result.push([Math.round(start+(t-start)*x),rounded]);
+      last=rounded;
+    }
+    changes.push({start,end:t,from,to:value});
+  }
+  return {points:result,changes};
+}
+function addVibrato(events,notes,parts,lane){
+  const {row,choice}=lane;
+  if(choice.autoVibrato===false || lane.percussive || lane.lane!=='Longs' || lane.longMode==='sustain')return [];
+  const section=row?.section;
+  const enabled=section==='STRINGS'?choice.vibratoStrings!==false:
+    section==='WOODWINDS'?choice.vibratoWinds!==false:
+    section==='BRASS'?choice.vibratoBrass===true:false;
+  if(!enabled)return [];
+  const clock=scoreClock(parts), phrases=[], points=new Map([[0,0]]);
+  let lastEndMs=-Infinity;
+  const ramp=(a,b,from,to)=>{
+    const count=Math.max(1,Math.min(b-a,Math.max(2*Math.abs(to-from),Math.ceil((clock.ms(b)-clock.ms(a))/20))));
+    for(let i=0;i<=count;i++){
+      const x=i/count;points.set(Math.round(a+(b-a)*x),clamp(from+(to-from)*x*x*(3-2*x)));
+    }
+  };
+  for(const [index,n] of notes.entries()){
+    const start=tick(n.p), noteEnd=tick(n.p+n.d), next=notes[index+1];
+    const end=Math.min(noteEnd,next?clock.after(tick(next.p),-15):noteEnd);
+    const durationMs=clock.ms(end)-clock.ms(start);
+    if(durationMs<1200 || n.trill!=null || /stacc|spicc|tremolo|harmonic/i.test(n.labels.join(' ')))continue;
+    if(notes.some(o=>o!==n && o.p<=n.p && o.p+o.d>n.p && o.pitch!==n.pitch))continue;
+    const words=n.source.part.events.filter(e=>e.type==='words' && e.staff===n.source.staff && tick(e.p)<=(n.scoreTick??start) && /vib/.test(e.words)).at(-1)?.words||'';
+    if(/senza\s+vib|non[ -]?vib|sans\s+vib|no\s+vib/.test(words))continue;
+    const explicit=n.labels.includes('Vibrato') || /con\s+vib|molto\s+vib/.test(words);
+    const phraseEnd=!next || clock.ms(tick(next.p))-clock.ms(noteEnd)>=180;
+    if(!explicit && !phraseEnd && durationMs<2400)continue;
+    if(!explicit && clock.ms(start)-lastEndMs<2000)continue;
+    const a=clock.at(clock.ms(start)+durationMs*.55), peak=clock.at(clock.ms(start)+durationMs*.84);
+    const ceiling=section==='STRINGS'?68:section==='WOODWINDS'?56:48;
+    const amount=Math.min(ceiling,clamp(24+.35*levelAt(n.source.points,n.scoreTick??start)));
+    ramp(a,peak,0,amount);ramp(peak,end,amount,0);
+    phrases.push({start,noteEnd,end,rampStart:a,peak,amount,pitch:n.pitch,reason:explicit?'written':phraseEnd?'phrase-end':'long-note'});
+    lastEndMs=clock.ms(end);
+  }
+  for(const [t,value] of [...points].sort((a,b)=>a[0]-b[0]))events.push({t,p:-25,b:[176,2,value]});
+  return phrases;
+}
+function renderScore(parts,choices){
+  const meta=conductor(parts), files=[], warnings=new Set();
+  for(const laneData of preparedLanes(parts,choices)){
+    const {name,sourceName,row,lane,group,whistle,choir,choice,percussive,timpani,contra}=laneData;
+    const musical=[], switches=[], events=[], points=laneCurve(laneData);
+    const short=['Shorts','Pizzicato'].includes(lane);
+    const controllerTransitions=[];
+    const controllers=[];
+    const dynamicAnchors=laneData.sources.flatMap(s=>s.part.events.filter(e=>e.type==='dyn' && e.staff===s.staff).map(e=>tick(e.p)));
+    if(timpani || (!percussive && (!short || choice.shortCC)))controllers.push([1,points]);
+    if(!percussive && !short)controllers.push([11,points.map(([t,value])=>[t,expression(value)])]);
+    if(!percussive && short)events.push({t:0,p:-31,b:[176,11,127]});
+    for(const [cc,raw] of controllers){
+      const smooth=smoothController(raw,laneData.notes,parts,dynamicAnchors);
+      for(const [t,value] of smooth.points)events.push({t,p:cc===1?-32:-31,b:[176,cc,value]});
+      controllerTransitions.push(...smooth.changes.map(change=>({cc,...change})));
+    }
+    const notes=[], unique=new Map();
+    for(const n of laneData.notes.sort((a,b)=>a.p-b.p)){
+      const key=[tick(n.p),tick(n.d),n.pitch,n.trill,[...n.labels].sort().join(',')].join('/');
+      const earlier=unique.get(key);
+      if(earlier){
+        if(levelAt(n.source.points,tick(n.p))>levelAt(earlier.source.points,tick(n.p)))earlier.source=n.source;
+      }else{const copy={...n};unique.set(key,copy);notes.push(copy);}
+    }
+    const modes=longModes(notes,row,lane,laneData.longMode);
+    const written=notes.map(note=>({note,start:tick(note.p),end:tick(note.p+note.d)}));
+    for(const {note,start} of written)note.scoreTick=start;
+    overlapLegato(notes,modes,parts,laneData);
+    const phraseStarts=compensatePhraseStarts(notes,parts,laneData,written);
+    const limited=phraseStarts.filter(n=>n.capped).length;
+    if(limited)warnings.add(name+' · '+limited+' débuts très courts : compensation limitée pour préserver la note suivante');
+    const addSwitch=(art,t)=>{
+      const changes=[];actionEvents(art,0,t,changes);events.push(...changes);
+      for(const e of changes)if(e.b[0]===144)switches.push([e.t,e.b[1],e.b[2]]);
+    };
+    for(const mode of modes)addSwitch(mode.art,mode.t);
+    let lastId=null, lastWhistle=null, lastTimpani=null;
+    for(const [noteIndex,n] of notes.entries()){
+      const t=tick(n.p),end=Math.max(t+1,tick(n.p+n.d));
+      const scoreTick=n.scoreTick??t;
+      const art=repetitionArt(notes,noteIndex,row,parts)||(modes.length?modes.findLast(m=>m.t<=scoreTick)?.art:row && chooseArt(row.articulation_set,n.labels,lane));
+      if(row && !art)warnings.add(name+' · déclencheur à vérifier');
+      if(!modes.length && art && art.ID!==lastId){addSwitch(art,t);lastId=art.ID;}
+      if(whistle){
+        const staccato=n.labels.some(x=>['Staccato','Staccatissimo','Spiccato'].includes(x));
+        if(staccato!==lastWhistle){
+          const pitch=staccato?Number(choice.whistleShort??33):Number(choice.whistleLong??24);
+          switches.push([t,pitch,100]);events.push({t,p:-19,b:[144,pitch,100]},{t:t+1,p:-18,b:[128,pitch,0]});lastWhistle=staccato;
+        }
+      }
+      const value=levelAt(n.source.points,scoreTick);
+      const baseVelocity=percussive?Math.max(1,Math.round(value*120/127)):Math.max(1,value);
+      const fixedLegato=laneData.longMode==='legato' || /legato/i.test(art?.Name||'');
+      // A small accent increment keeps legato 80/86 in the same speed zone.
+      const nominalVelocity=fixedLegato?(n.fastLegato?105:80):(percussive || !group || short?baseVelocity:80);
+      const v=Math.min(percussive?120:127,nominalVelocity+(n.accent?6:0));
+      if(timpani){
+        const roll=n.labels.includes('Tremolo');
+        const crescendo=roll && levelAt(points,end-1)>levelAt(points,t);
+        const key=crescendo?Number(choice.timpaniCresc??40):roll?Number(choice.timpaniRoll??38):Number(choice.timpaniHit??36);
+        if(key!==lastTimpani){
+          switches.push([t,key,100]);
+          events.push({t,p:-19,b:[144,key,100]},{t:t+1,p:-18,b:[128,key,0]});
+          lastTimpani=key;
+        }
+      }
+      for(const pitch of [n.pitch,n.trill].filter(x=>x!=null))musical.push([t,pitch,v,end-t,art?.ArticulationID||0]);
+    }
+    // One MIDI gate per pitch prevents an overlapping voice from releasing a held note.
+    const gates=new Map();
+    for(const [t,pitch,v,d] of musical){
+      const key=t+'/'+pitch, existing=gates.get(key);
+      if(existing){existing.v=Math.max(existing.v,v);existing.end=Math.max(existing.end,t+d);}
+      else gates.set(key,{t,pitch,v,end:t+d});
+    }
+    const ordered=[...gates.values()].sort((a,b)=>a.t-b.t);
+    for(const gate of ordered){
+      const next=ordered.find(other=>other.pitch===gate.pitch && other.t>gate.t);
+      if(next && next.t<gate.end){next.end=Math.max(next.end,gate.end);gate.end=next.t;}
+      events.push({t:gate.t,p:0,b:[144,gate.pitch,gate.v]},{t:gate.end,p:-8,b:[128,gate.pitch,0]});
+    }
+    const originalMusical=musical.slice();musical.length=0;
+    for(const gate of ordered){
+      const art=originalMusical.find(n=>n[0]===gate.t && n[1]===gate.pitch)?.[4]||0;
+      musical.push([gate.t,gate.pitch,gate.v,gate.end-gate.t,art]);
+    }
+    let destination=contra?(lane==='Shorts'?'CONTRABASS_CLARINET_SHORTS':'CONTRABASS_CLARINET_LONGS'):choir?'All Saints Choir':whistle?'Tin Whistle':
+      /bagpipe/i.test(name)?'Bagpipes':/^(Piccolo Snare|Snare Drum)/i.test(name)?'Snare High':
+      /^Suspended Cymbal/i.test(name)?'Cymbal High':
+      /^Crash Cymbal/i.test(name)?'Piatti':/^Harp 2/i.test(name)?'Harp 2':null;
+    if(laneData.tomDestination)destination=laneData.tomDestination;
+    const delay=trackDelay(row,laneData.longMode);
+    let route=(destination==='CONTRABASS_CLARINET_LONGS'?'Contrebasse clarinette legato':destination==='CONTRABASS_CLARINET_SHORTS'?'Contrebasse clarinette staccato':destination)|| (row?row.instrument_group+' / '+row.lane:'À affecter · désactivée');
+    if(laneData.longVoice && laneData.longVoice!=='legato1')route=name.replace(' — Longs — ',' — ');
+    const vibratoPhrases=addVibrato(events,notes,parts,laneData);
+    const shortAccentCount=0;
+    const legatoAccentCount=notes.filter(n=>n.accent && laneData.longMode==='legato').length;
+    const bridgedRests=notes.filter(n=>n.bridgedRest).map(n=>n.bridgedRest);
+    files.push({name,sourceName,destination,route,delayMs:delay.ms,delayBasis:delay.basis,longMode:laneData.longMode||null,longVoice:laneData.longVoice||null,baseName:laneData.baseName||null,number:row?.track_number||0,musical,switches,phraseStarts,shortAccentCount,legatoAccentCount,bridgedRests,
+      modes:modes.map(m=>[m.t,m.art.ArticulationID,m.poly]),events,controllerTransitions,vibratoPhrases,
+      track:midiTrack(name,events),single:midiFile([midiTrack(name,[...meta,...events])],0)});
+  }
+  const meters=meta.filter(e=>e.b[1]===88).sort((a,b)=>a.t-b.t).map(e=>[e.t,e.b[3],2**e.b[4]]);
+  const tempos=meta.filter(e=>e.b[1]===81).sort((a,b)=>a.t-b.t).map(e=>[e.t,60000000/(e.b[3]*65536+e.b[4]*256+e.b[5])]);
+  return {meters,tempos,bytes:midiFile([midiTrack('Tempo et mesures',meta),...files.map(f=>f.track)]),files,warnings:[...warnings]};
+}
+function build(){
+  const choices=parsed.map((_,i)=>{
+    const box=document.querySelector('[data-part="'+i+'"]');
+    return {group:box.querySelector('.group').value,bank:box.querySelector('.bank').value,octave:box.querySelector('.octave').value,shortCC:$('#shortCC').checked,whistleShort:$('#whistleShort').value,whistleLong:$('#whistleLong').value,timpaniHit:$('#timpaniHit').value,timpaniRoll:$('#timpaniRoll').value,timpaniCresc:$('#timpaniCresc').value,splitLongs:$('#splitLongs').checked,autoVibrato:$('#autoVibrato').checked,vibratoStrings:$('#vibratoStrings').checked,vibratoWinds:$('#vibratoWinds').checked,vibratoBrass:$('#vibratoBrass').checked,fastStringTiming:$('#fastStringTiming').checked};
+  });
+  return renderScore(parsed,choices);
+}
+function download(bytes,name){
+  const url=URL.createObjectURL(new Blob([bytes],{type:'audio/midi'}));
+  const a=document.createElement('a');a.href=url;a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+$('#convert').onclick=()=>{
+  try {
+    const r=build();
+    const title=$('#file').files[0].name.replace(/\.[^.]+$/,'');
+    download(r.bytes,title+' - Logic.mid');
+    const box=$('#summary');box.replaceChildren();
+    const details=document.createElement('details'), heading=document.createElement('summary');
+    heading.textContent=r.files.length+' pistes · Télécharger une région pour une piste existante';
+    details.append(heading);
+    for(const f of r.files){
+      const button=document.createElement('button');
+      button.textContent=f.route+' · '+f.name;
+      button.onclick=()=>download(f.single,button.textContent+'.mid');
+      details.append(button,document.createElement('br'));
+    }
+    box.append(details);
+    const mapping=document.createElement('button');
+    mapping.textContent='Enregistrer les affectations pour le projet Logic';
+    mapping.onclick=()=>download(new TextEncoder().encode(JSON.stringify(planForLogic(r))),title+' - Logic.json');
+    box.append(mapping);$('#convertStatus').textContent=r.warnings.join(' / ');
+  } catch(e){$('#convertStatus').textContent=e.message;}
+};
+
+function planForLogic(r){return {version:7,revision:'7.13',meters:r.meters,tempos:r.tempos,templateDelays:assignments.map(row=>({number:row.track_number,group:row.instrument_group,lane:row.lane,section:row.section,...trackDelay(row,null)})),tracks:r.files.map(({name,sourceName,destination,number,delayMs,delayBasis,longMode,longVoice,baseName,musical,switches,modes,events,phraseStarts,shortAccentCount,legatoAccentCount,bridgedRests,controllerTransitions,vibratoPhrases})=>({name,sourceName,destination,number,delayMs,delayBasis,longMode,longVoice,baseName,musical,switches,modes,events,phraseStarts,shortAccentCount,legatoAccentCount,bridgedRests,controllerTransitions,vibratoPhrases}))};}
+function renderParts(){let html="";parsed.forEach((p,i)=>{let d=infer(p.name);html+='<div class="part" data-part="'+i+'"><div><strong>'+esc(p.name)+'</strong><small>'+p.notes.length+' notes</small></div><label><small>Instrument</small><select class="group">'+['',...groups].map(g=>'<option value="'+esc(g)+'" '+(g===d.group?'selected':'')+'>'+esc(g||'Hors template')+'</option>').join("")+'</select></label><label><small>Banque</small><select class="bank">'+banks.map(b=>'<option '+(b===d.bank?'selected':'')+'>'+esc(b)+'</option>').join("")+ '</select></label><label><small>Octave des notes</small><select class="octave"><option value="template">Réglage template</option><option value="0">Son réel Dorico</option><option value="-12">Son réel − 1 octave</option><option value="12">Son réel + 1 octave</option></select></label></div>' });$('#parts').innerHTML=html}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('#analyze').onclick=async()=>{let f=$('#file').files[0];if(!f){$('#fileStatus').textContent='Choisis d’abord un fichier MusicXML.';return}$('#analyze').disabled=true;$('#fileStatus').textContent='Lecture et analyse de la partition…';try{parsed=parseXML(await xmlText(f));if(!parsed.length)throw Error('Aucune partie instrumentale trouvée.');renderParts();$('#setup').classList.remove('hidden');$('#fileStatus').textContent='Partition analysée : '+parsed.length+' partie(s).'}catch(e){$('#fileStatus').textContent='Impossible de lire ce fichier : '+e.message}finally{$('#analyze').disabled=false}};
+</script></body></html>

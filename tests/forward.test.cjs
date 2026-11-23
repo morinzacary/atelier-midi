@@ -1,0 +1,22 @@
+// Musical helpers from the exact standalone app; no external DOM dependency.
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const R=path.resolve(__dirname,'..'),E=require('../src/midi-to-score/engine.js');
+const html=fs.readFileSync(path.join(R,'apps/score-to-midi/index.html'),'utf8');
+const els=new Map(),document={querySelector:s=>{if(!els.has(s))els.set(s,{});return els.get(s)}};
+const c=vm.createContext({document,console,TextEncoder,TextDecoder,Uint8Array,DataView,Blob,URL,setTimeout});
+for(const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g))vm.runInContext(m[1],c);
+vm.runInContext('globalThis.api={joinTies,laneFor,midiTrack,midiFile,scoreClock,smoothController}',c);
+const A=c.api,n=(p,d,extra={})=>({p,d,pitch:65,voice:'1',staff:'1',labels:[],...extra});
+let joined=A.joinTies([n(0,3,{start:true}),n(3,3,{stop:true,start:true}),n(6,2,{stop:true})]);
+assert.equal(joined.length,1);assert.equal(joined[0].d,8);
+assert.equal(A.joinTies([n(0,1),n(1,1)]).length,2);
+assert.equal(A.joinTies([n(0,1,{start:true}),n(1,1,{stop:true,labels:['Up Bow']})]).length,2);
+assert.equal(A.laneFor(['Accent'],'VIOLINS I'),'Longs');assert.equal(A.laneFor(['Staccato'],'VIOLINS I'),'Shorts');
+const tempo=[{t:0,p:-50,b:[255,81,3,7,161,32]}];
+const musical=[{t:0,p:0,b:[144,65,80]},{t:3840,p:-8,b:[128,65,0]},{t:0,p:-32,b:[176,1,20]},{t:1440,p:-32,b:[176,1,100]}];
+const bytes=Uint8Array.from(A.midiFile([A.midiTrack('Tempo',tempo),A.midiTrack('Flute',musical)]));
+const parsed=E.parseMidi(bytes);assert.equal(parsed.tracks[0].notes.length,1);assert.equal(parsed.tracks[0].notes[0].d,8*E.D);assert.equal(parsed.tracks[0].notes[0].ch,0);assert.equal(parsed.tracks[0].cc.length,2);
+const parts=[{events:[{p:0,type:'tempo',value:120}]}];assert.equal(A.scoreClock(parts).after(0,60),58);
+const smooth=A.smoothController([[0,20],[480,100]],[n(0,1)],parts,[480]);assert(smooth.points.length>2);assert.equal(smooth.points.at(-1)[1],100);
+fs.mkdirSync(path.join(R,'tests/generated'),{recursive:true});fs.writeFileSync(path.join(R,'tests/generated/forward-synthetic.mid'),bytes);
+console.log('OK : liaisons sur trois mesures, répétitions, coup d’archet, accents/shorts, MIDI relu, canal 1, CC et transitions progressives.');

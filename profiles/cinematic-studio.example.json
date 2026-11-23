@@ -1,0 +1,1712 @@
+{
+  "source_template": "Example Cinematic Studio orchestral layout",
+  "scope": "Cinematic Studio instrument lanes: woodwinds, brass, strings",
+  "articulation_sets": {
+    "CSB Legato": {
+      "plist_file": "CSB Legato.plist",
+      "multiple_outputs_active": null,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Legato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 76
+            }
+          ]
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Sustain",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 81
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 80,
+          "ValueLow": 76
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 85,
+          "ValueLow": 81
+        }
+      ]
+    },
+    "CSS Longs": {
+      "plist_file": "CSS Longs.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Sustain + Con Sordino",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 81
+            },
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 86
+            }
+          ]
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Sustain",
+          "Output": [
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 91
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 81
+            }
+          ]
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Legato Expressif + Con Sordino",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 6
+            },
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 86
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 76
+            }
+          ]
+        },
+        {
+          "ArticulationID": 4,
+          "ID": 1004,
+          "MidiChannel": 0,
+          "Name": "Legato + Con Sordino (Low Latency)",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 86
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 76
+            }
+          ]
+        },
+        {
+          "ArticulationID": 5,
+          "ID": 1005,
+          "MidiChannel": 0,
+          "Name": "Legato (Low Latency)",
+          "Output": [
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 91
+            }
+          ]
+        },
+        {
+          "ArticulationID": 6,
+          "ID": 1006,
+          "MidiChannel": 0,
+          "Name": "Legato Expressif",
+          "Output": [
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 76
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 6
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 91
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1004,
+          "MB1": 58,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1005,
+          "MB1": 58,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1006,
+          "MB1": 58,
+          "Status": "Controller"
+        }
+      ]
+    },
+    "CSS Pizz": {
+      "plist_file": "CSS Pizz.plist",
+      "multiple_outputs_active": null,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Pizzicato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 31
+            }
+          ],
+          "Symbol": "Pizzicato (Left Hand)"
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Bartok Snap",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 36
+            }
+          ]
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Col Legno",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 41
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1002,
+          "Status": "Controller"
+        },
+        {
+          "ID": 1003,
+          "Status": "Controller"
+        }
+      ]
+    },
+    "CSS Shorts": {
+      "plist_file": "CSS Shorts.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Spiccato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 0
+            }
+          ],
+          "Symbol": "Staccato"
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Staccatissimo",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 33
+            }
+          ],
+          "Symbol": "Staccatissimo"
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Staccato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 65
+            }
+          ],
+          "Symbol": "Staccato"
+        },
+        {
+          "ArticulationID": 4,
+          "ID": 1004,
+          "MidiChannel": 0,
+          "Name": "Sfz",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 97
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 32,
+          "ValueLow": 0
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 64,
+          "ValueLow": 33
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 96,
+          "ValueLow": 65
+        },
+        {
+          "ID": 1004,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 127,
+          "ValueLow": 97
+        }
+      ]
+    },
+    "CSW Longs": {
+      "plist_file": "CSW Longs.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Legato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 80
+            },
+            {
+              "MB1": 24,
+              "MidiChannel": 0,
+              "Status": "Note On"
+            }
+          ]
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Sustain",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 81
+            }
+          ]
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Legato Expressif",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 80
+            },
+            {
+              "MB1": 24,
+              "Status": "Note On",
+              "ValueLow": 83
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 127,
+          "ValueLow": 65
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 64,
+          "ValueLow": 0
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 10,
+          "ValueLow": 6
+        }
+      ]
+    },
+    "CSW Marcato": {
+      "plist_file": "CSW Marcato.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Leg On",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 76
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 66
+            }
+          ],
+          "Symbol": "Marcato"
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Leg Off",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 81
+            }
+          ],
+          "Symbol": "Marcato"
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Overlay Rep + Leg On",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 76
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 71
+            }
+          ],
+          "Symbol": "Marcato"
+        },
+        {
+          "ArticulationID": 4,
+          "ID": 1004,
+          "MidiChannel": 0,
+          "Name": "Overlay Rep + Leg Off",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 81
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 71
+            }
+          ],
+          "Symbol": "Marcato"
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 80,
+          "ValueLow": 76
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 85,
+          "ValueLow": 81
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 75,
+          "ValueLow": 71
+        },
+        {
+          "ID": 1004,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 75,
+          "ValueLow": 71
+        }
+      ]
+    },
+    "CSW Muted": {
+      "plist_file": "CSW Muted.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Legato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 76
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 56
+            }
+          ]
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Sustain Long",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 56
+            },
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 81
+            }
+          ]
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Sustain Short",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 31
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 80,
+          "ValueLow": 76
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 60,
+          "ValueLow": 56
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 40,
+          "ValueLow": 31
+        }
+      ]
+    },
+    "CSW Shorts": {
+      "plist_file": "CSW Shorts.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Repetitions",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 0
+            }
+          ],
+          "Symbol": "Staccato"
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Staccatissimo",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 33
+            }
+          ],
+          "Symbol": "Staccatissimo"
+        },
+        {
+          "ArticulationID": 3,
+          "ID": 1003,
+          "MidiChannel": 0,
+          "Name": "Staccato",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 65
+            }
+          ],
+          "Symbol": "Staccato"
+        },
+        {
+          "ArticulationID": 4,
+          "ID": 1004,
+          "MidiChannel": 0,
+          "Name": "Sfz",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 0
+            },
+            {
+              "MB1": 29,
+              "Status": "Note On",
+              "ValueLow": 97
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 32,
+          "ValueLow": 0
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 64,
+          "ValueLow": 33
+        },
+        {
+          "ID": 1003,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 96,
+          "ValueLow": 65
+        },
+        {
+          "ID": 1004,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 127,
+          "ValueLow": 97
+        }
+      ]
+    },
+    "CSW Trills": {
+      "plist_file": "CSW Trills.plist",
+      "multiple_outputs_active": true,
+      "articulations": [
+        {
+          "ArticulationID": 1,
+          "ID": 1001,
+          "MidiChannel": 0,
+          "Name": "Legato On",
+          "Output": [
+            {
+              "MB1": 58,
+              "MidiChannel": 0,
+              "Status": "Controller",
+              "ValueLow": 76
+            },
+            {
+              "MB1": 27,
+              "Status": "Note On"
+            }
+          ]
+        },
+        {
+          "ArticulationID": 2,
+          "ID": 1002,
+          "MidiChannel": 0,
+          "Name": "Legato Off",
+          "Output": [
+            {
+              "MB1": 58,
+              "Status": "Controller",
+              "ValueLow": 81
+            },
+            {
+              "MB1": 27,
+              "Status": "Note On"
+            }
+          ]
+        }
+      ],
+      "switches": [
+        {
+          "ID": 1001,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 80,
+          "ValueLow": 76
+        },
+        {
+          "ID": 1002,
+          "MB1": 58,
+          "Status": "Controller",
+          "ValueHigh": 85,
+          "ValueLow": 81
+        }
+      ]
+    }
+  },
+  "track_assignments": [
+    {
+      "track_number": 3,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 4,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 5,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 6,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Flutter",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 7,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 8,
+      "section": "WOODWINDS",
+      "instrument_group": "PICCOLO",
+      "lane": "Measured Repetiton",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 10,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 11,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 12,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 13,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Flutter",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 14,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 15,
+      "section": "WOODWINDS",
+      "instrument_group": "2 FLUTES",
+      "lane": "Measured Repetiton",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 17,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 18,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 19,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 20,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Flutter",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 21,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 22,
+      "section": "WOODWINDS",
+      "instrument_group": "FLUTE ALTO",
+      "lane": "Measured Repetiton",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 24,
+      "section": "WOODWINDS",
+      "instrument_group": "2 OBOES",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 25,
+      "section": "WOODWINDS",
+      "instrument_group": "2 OBOES",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 26,
+      "section": "WOODWINDS",
+      "instrument_group": "2 OBOES",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 27,
+      "section": "WOODWINDS",
+      "instrument_group": "2 OBOES",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 28,
+      "section": "WOODWINDS",
+      "instrument_group": "2 OBOES",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 30,
+      "section": "WOODWINDS",
+      "instrument_group": "ENGLISH HORN",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 31,
+      "section": "WOODWINDS",
+      "instrument_group": "ENGLISH HORN",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 32,
+      "section": "WOODWINDS",
+      "instrument_group": "ENGLISH HORN",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 33,
+      "section": "WOODWINDS",
+      "instrument_group": "ENGLISH HORN",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 34,
+      "section": "WOODWINDS",
+      "instrument_group": "ENGLISH HORN",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 36,
+      "section": "WOODWINDS",
+      "instrument_group": "2 CLARINETS",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 37,
+      "section": "WOODWINDS",
+      "instrument_group": "2 CLARINETS",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 38,
+      "section": "WOODWINDS",
+      "instrument_group": "2 CLARINETS",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 39,
+      "section": "WOODWINDS",
+      "instrument_group": "2 CLARINETS",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 40,
+      "section": "WOODWINDS",
+      "instrument_group": "2 CLARINETS",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 42,
+      "section": "WOODWINDS",
+      "instrument_group": "BASS CLARINET",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 43,
+      "section": "WOODWINDS",
+      "instrument_group": "BASS CLARINET",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 44,
+      "section": "WOODWINDS",
+      "instrument_group": "BASS CLARINET",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 45,
+      "section": "WOODWINDS",
+      "instrument_group": "BASS CLARINET",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 46,
+      "section": "WOODWINDS",
+      "instrument_group": "BASS CLARINET",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 48,
+      "section": "WOODWINDS",
+      "instrument_group": "2 BASSOONS",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 49,
+      "section": "WOODWINDS",
+      "instrument_group": "2 BASSOONS",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 50,
+      "section": "WOODWINDS",
+      "instrument_group": "2 BASSOONS",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 51,
+      "section": "WOODWINDS",
+      "instrument_group": "2 BASSOONS",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 52,
+      "section": "WOODWINDS",
+      "instrument_group": "2 BASSOONS",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 54,
+      "section": "WOODWINDS",
+      "instrument_group": "CONTRABASSOON",
+      "lane": "Longs",
+      "articulation_set": "CSW Longs"
+    },
+    {
+      "track_number": 55,
+      "section": "WOODWINDS",
+      "instrument_group": "CONTRABASSOON",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 56,
+      "section": "WOODWINDS",
+      "instrument_group": "CONTRABASSOON",
+      "lane": "Trills",
+      "articulation_set": "CSW Trills"
+    },
+    {
+      "track_number": 57,
+      "section": "WOODWINDS",
+      "instrument_group": "CONTRABASSOON",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 58,
+      "section": "WOODWINDS",
+      "instrument_group": "CONTRABASSOON",
+      "lane": "Measured Repetition",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 61,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Longs",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 62,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 63,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Muted",
+      "articulation_set": "CSW Muted"
+    },
+    {
+      "track_number": 64,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Flutter",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 65,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 66,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Double Tongue",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 67,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 68,
+      "section": "BRASS",
+      "instrument_group": "4 HORNS",
+      "lane": "Rips",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 70,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Longs",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 71,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 72,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Muted",
+      "articulation_set": "CSW Muted"
+    },
+    {
+      "track_number": 73,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Flutter",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 74,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 75,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Double Tongue",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 76,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 77,
+      "section": "BRASS",
+      "instrument_group": "2 TRUMPETS",
+      "lane": "Rips",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 79,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Longs",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 80,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 81,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Muted",
+      "articulation_set": "CSW Muted"
+    },
+    {
+      "track_number": 82,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Flutter",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 83,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Double Tongue",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 84,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 85,
+      "section": "BRASS",
+      "instrument_group": "2 TROMBONES",
+      "lane": "Rips",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 87,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Longs",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 88,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 89,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Muted",
+      "articulation_set": "CSW Muted"
+    },
+    {
+      "track_number": 90,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Flutter",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 91,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Double Tongue",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 92,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 93,
+      "section": "BRASS",
+      "instrument_group": "BASS TROMBONE",
+      "lane": "Rips",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 95,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Longs",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 96,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 97,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Flutter",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 98,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 99,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 100,
+      "section": "BRASS",
+      "instrument_group": "TUBA",
+      "lane": "Rips",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 182,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Longs",
+      "articulation_set": "CSS Longs"
+    },
+    {
+      "track_number": 183,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Shorts",
+      "articulation_set": "CSS Shorts"
+    },
+    {
+      "track_number": 184,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 185,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Measured Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 186,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Harmonic",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 187,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 188,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 189,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS I",
+      "lane": "Pizzicato",
+      "articulation_set": "Nouveau réglage"
+    },
+    {
+      "track_number": 191,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Longs",
+      "articulation_set": "CSS Longs"
+    },
+    {
+      "track_number": 192,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Shorts",
+      "articulation_set": "CSS Shorts"
+    },
+    {
+      "track_number": 193,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 194,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Measured Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 195,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Harmonic",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 196,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 197,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 198,
+      "section": "STRINGS",
+      "instrument_group": "VIOLINS II",
+      "lane": "Pizzicato",
+      "articulation_set": "CSS Pizz"
+    },
+    {
+      "track_number": 200,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Longs",
+      "articulation_set": "CSS Longs"
+    },
+    {
+      "track_number": 201,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Shorts",
+      "articulation_set": "CSS Shorts"
+    },
+    {
+      "track_number": 202,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 203,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Measured Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 204,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Harmonics",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 205,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 206,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 207,
+      "section": "STRINGS",
+      "instrument_group": "VIOLAS",
+      "lane": "Pizzicato",
+      "articulation_set": "CSS Pizz"
+    },
+    {
+      "track_number": 209,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Longs",
+      "articulation_set": "CSS Longs"
+    },
+    {
+      "track_number": 210,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Shorts",
+      "articulation_set": "CSW Shorts"
+    },
+    {
+      "track_number": 211,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 212,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Measured Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 213,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Harmonics",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 214,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 215,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 216,
+      "section": "STRINGS",
+      "instrument_group": "CELLO",
+      "lane": "Pizzicato",
+      "articulation_set": "CSS Pizz"
+    },
+    {
+      "track_number": 218,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Longs",
+      "articulation_set": "CSS Longs"
+    },
+    {
+      "track_number": 219,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Shorts",
+      "articulation_set": "CSS Shorts"
+    },
+    {
+      "track_number": 220,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 221,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Measured Tremolo",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 222,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Trills",
+      "articulation_set": "CSB Legato"
+    },
+    {
+      "track_number": 223,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Marcato",
+      "articulation_set": "CSW Marcato"
+    },
+    {
+      "track_number": 224,
+      "section": "STRINGS",
+      "instrument_group": "DOUBLEBASSES",
+      "lane": "Pizzicato",
+      "articulation_set": "CSS Pizz"
+    }
+  ],
+  "verification_notes": [
+    "Example mapping: adapt track destinations and articulation sets to your own DAW template. Sound libraries and Logic projects are not included."
+  ]
+}
